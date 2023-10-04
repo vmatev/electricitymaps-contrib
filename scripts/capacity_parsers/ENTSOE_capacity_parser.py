@@ -7,7 +7,7 @@ from requests import Session
 
 from electricitymap.contrib.config import ZoneKey
 from parsers.ENTSOE import ENTSOE_DOMAIN_MAPPINGS, query_ENTSOE
-from scripts.utils import update_zone
+from scripts.utils import ROOT_PATH, run_shell_command, update_zone
 
 """
 Update capacity configurations for ENTOS-E zones for a chosen year.
@@ -128,6 +128,11 @@ def main():
     print(f"Getting capacity for all ENTSOE zones at {target_datetime}")
     fetch_and_update_entsoe_capacities(target_datetime)
     update_aggregated_capacities(target_datetime)
+
+    run_shell_command(
+        f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH
+    )
+
     for zone in ENTSOE_ZONES:
         print(f"Updated {zone}.yaml with capacity for {target_datetime} in config/zones.")
     print(f"Updated aggregated zones with capacity for {target_datetime} in config/zones.")

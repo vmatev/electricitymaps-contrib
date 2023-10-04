@@ -9,7 +9,7 @@ from requests import Response, Session
 from electricitymap.contrib.config import ZONES_CONFIG, ZoneKey
 from parsers.EIA import REGIONS
 from parsers.lib.utils import get_token
-from scripts.utils import update_zone
+from scripts.utils import ROOT_PATH, run_shell_command, update_zone
 
 CAPACITY_URL = "https://api.eia.gov/v2/electricity/operating-generator-capacity/data/?frequency=monthly&data[0]=nameplate-capacity-mw&facets[balancing_authority_code][]={}"
 API_KEY = get_token("EIA_KEY")
@@ -115,6 +115,11 @@ def main():
         fetch_and_update_all_eia_capacity(target_datetime)
     else:
         fetch_and_update_capacity_for_one_zone(zone, target_datetime)
+
+    run_shell_command(
+        f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH
+    )
+
     print(f"Updated yaml configuration for {zone} with capacity for {target_datetime} in config/zones.")
 
 
