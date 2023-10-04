@@ -1,15 +1,21 @@
 
+import argparse
 from datetime import datetime
-from logging import Logger, getLogger
 
-import pandas as pd
 from bs4 import BeautifulSoup
-from requests import Response, Session
+from requests import Session
 
-from electricitymap.contrib.config import ZONES_CONFIG, ZoneKey
-from parsers.ENTSOE import ENTSOE_DOMAIN_MAPPINGS, ENTSOE_PARAMETER_DESC, query_ENTSOE
-from parsers.lib.utils import get_token
+from electricitymap.contrib.config import ZoneKey
+from parsers.ENTSOE import ENTSOE_DOMAIN_MAPPINGS, query_ENTSOE
 from scripts.utils import update_zone
+
+"""
+Update capacity configurations for ENTOS-E zones for a chosen year.
+The zones included are: ["DK-DK1","DK-DK2", "NO-NO1","NO-NO2","NO-NO3","NO-NO4","NO-NO5"]
+
+Example usage:
+    poetry run python scripts/capacity_parsers/ENTSOE_capacity_parser.py
+"""
 
 SOURCE = "entsoe.eu"
 
@@ -83,13 +89,14 @@ def fetch_capacity(zone_key: ZoneKey, target_datetime: datetime) -> dict:
                 fuel_capacity_dict ={}
                 fuel_capacity_dict["value"] = value
                 fuel_capacity_dict["datetime"] = end_date.strftime("%Y-01-01")
-                fuel_capacity_dict["source"] = "ENTSO-E"
+                fuel_capacity_dict["source"] = SOURCE
                 capacity_dict[ENTSOE_PARAMETER_TO_MODE[fuel_code]] = fuel_capacity_dict
     if capacity_dict == {}:
         raise ValueError(f"ENTSO-E capacity parser failed to find capacity data for {zone_key} on {target_datetime.date()}")
     return capacity_dict
 
-def fetch_and_update_entsoe_capacities(target_datetime:datetime) -> None:
+def fetch_and_update_entsoe_capacities(target_datetime:str) -> None:
+    target_datetime = datetime.fromisoformat(target_datetime)
     for zone in ENTSOE_ZONES:
         zone_capacity = fetch_capacity(zone, target_datetime)
         update_zone(zone, zone_capacity)
@@ -109,6 +116,20 @@ def update_aggregated_capacities(target_datetime:datetime)-> None:
                 else:
                     aggregated_zone_capacity[mode] = subzone_capacity[mode]
         update_zone(zone, aggregated_zone_capacity)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("target_datetime", help="The target_datetime to get capacity for")
+    args = parser.parse_args()
+
+    target_datetime = args.target_datetime
+
+    print(f"Getting capacity for ENTSOE_ZONES at {target_datetime}")
+    fetch_and_update_entsoe_capacities(target_datetime)
+    for zone in ENTSOE_ZONES:
+        print(f"Updated {zone}.yaml with capacity for {target_datetime} in config/zones.")
 
 if __name__ == "__main__":
     fetch_capacity("NO-NO1", datetime(2023,5,1))

@@ -1,4 +1,5 @@
 
+import argparse
 from datetime import datetime
 from logging import Logger, getLogger
 
@@ -82,16 +83,17 @@ def format_capacity(df: pd.DataFrame, target_datetime: datetime) -> dict:
         capacity_dict[mode] = mode_dict
     return capacity_dict
 
-def fetch_and_update_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: datetime) -> None:
+def fetch_and_update_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: str) -> None:
+    target_datetime = datetime.fromisoformat(target_datetime)
     zone_capacity = fetch_capacity(zone_key, target_datetime)
     if zone_key in ZONES_CONFIG:
         update_zone(zone_key, zone_capacity)
-        print(
-            f"Fetched and updated capacity data for {zone_key} at {target_datetime.strftime('%Y-%m')}"
-        )
+
+
 def fetch_and_update_all_eia_capacity(
-    target_datetime: datetime
+    target_datetime: str
 ) -> pd.DataFrame:
+    target_datetime = datetime.fromisoformat(target_datetime)
     for zone in US_ZONES:
         zone_capacity = fetch_capacity(zone, target_datetime)
         if zone in ZONES_CONFIG:
@@ -100,5 +102,21 @@ def fetch_and_update_all_eia_capacity(
                 f"Fetched and updated capacity data for {zone} at {target_datetime.strftime('%Y-%m')}"
             )
 
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("zone", help="The zone to get capacity for")
+    parser.add_argument("target_datetime", help="The target_datetime to get capacity for")
+    args = parser.parse_args()
+    zone = args.zone
+    target_datetime = args.target_datetime
+
+    print(f"Getting capacity for {zone} at {target_datetime}")
+    if zone == "all zones":
+        fetch_and_update_all_eia_capacity(target_datetime)
+    else:
+        fetch_and_update_capacity_for_one_zone(zone, target_datetime)
+    print(f"Updated yaml configuration for {zone} with capacity for {target_datetime} in config/zones.")
+
+
 if __name__ == "__main__":
-    fetch_and_update_capacity_for_one_zone("US-TEX-ERCO", datetime(2023,6,1))
+    main()
