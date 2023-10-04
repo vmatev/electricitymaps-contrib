@@ -75,23 +75,25 @@ def update_zone(zone_key: ZoneKey, data: dict) -> None:
 
     capacity = _new_zone_config["capacity"]
 
-    # if capacity data is not a dictionary with a datetime key
-
-    for mode in capacity:
-        if capacity.get(mode) is None or isinstance(capacity[mode], float):
+    if all(isinstance(capacity[m], float) or isinstance(capacity[m], int) for m in capacity.keys()):
+        capacity = data
+    else:
+        for mode in capacity:
+            if (isinstance(capacity[mode], float) or isinstance(capacity[mode], int)):
+                if mode in data:
+                    capacity[mode] = data[mode]
+            elif isinstance(capacity[mode], dict):
+                existing_capacity = capacity[mode]
+                if mode in data:
+                    if existing_capacity["datetime"] != data[mode]["datetime"]:
+                        capacity[mode] = [existing_capacity] + [data[mode]]
+            elif isinstance(capacity[mode], list):
+                if mode in data:
+                    if data[mode]["datetime"] not in [d["datetime"] for d in capacity[mode]]:
+                        capacity[mode].append(data[mode])
+        new_modes = [m for m in data if m not in capacity]
+        for mode in new_modes:
             capacity[mode] = data[mode]
-        elif isinstance(capacity[mode], dict):
-            existing_capacity = capacity[mode]
-            if mode in data:
-                if existing_capacity["datetime"] != data[mode]["datetime"]:
-                    capacity[mode] = [existing_capacity] + [data[mode]]
-        elif isinstance(capacity[mode], list):
-            if mode in data:
-                if data[mode]["datetime"] not in [d["datetime"] for d in capacity[mode]]:
-                    capacity[mode].append(data[mode])
-    new_modes = [m for m in data if m not in capacity]
-    for mode in new_modes:
-        capacity[mode] = data[mode]
 
     _new_zone_config["capacity"] = capacity
 

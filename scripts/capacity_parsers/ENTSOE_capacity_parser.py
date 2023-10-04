@@ -52,7 +52,8 @@ ENTSOE_PARAMETER_TO_MODE = {
 }
 
 ENTSOE_ZONES = ["DK-DK1","DK-DK2", "NO-NO1","NO-NO2","NO-NO3","NO-NO4","NO-NO5"]
-def query_capacity(    in_domain: str, session: Session, target_datetime: datetime
+AGGREGATED_ZONE_MAPPING = {"DK":["DK-DK1","DK-DK2"], "NO":["NO-NO1","NO-NO2","NO-NO3","NO-NO4","NO-NO5"]}
+def query_capacity(in_domain: str, session: Session, target_datetime: datetime
 ) -> str | None:
     params = {
         "documentType": "A68",
@@ -103,10 +104,10 @@ def fetch_and_update_entsoe_capacities(target_datetime:str) -> None:
         print(f"Updated capacity for {zone} on {target_datetime.date()}")
 
 def update_aggregated_capacities(target_datetime:datetime)-> None:
-    aggregated_zones_mapping = {"DK":["DK-DK1","DK-DK2"], "NO":["NO-NO1","NO-NO2","NO-NO3","NO-NO4","NO-NO5"]}
-    for zone in aggregated_zones_mapping:
+    target_datetime = datetime.fromisoformat(target_datetime)
+    for zone in AGGREGATED_ZONE_MAPPING:
         zone_capacity_list = []
-        for subzone in aggregated_zones_mapping[zone]:
+        for subzone in AGGREGATED_ZONE_MAPPING[zone]:
             zone_capacity_list.append(fetch_capacity(subzone, target_datetime))
         aggregated_zone_capacity = zone_capacity_list[0]
         for subzone_capacity in zone_capacity_list[1:]:
@@ -120,16 +121,16 @@ def update_aggregated_capacities(target_datetime:datetime)-> None:
 
 def main():
     parser = argparse.ArgumentParser()
-
     parser.add_argument("target_datetime", help="The target_datetime to get capacity for")
     args = parser.parse_args()
-
     target_datetime = args.target_datetime
 
-    print(f"Getting capacity for ENTSOE_ZONES at {target_datetime}")
+    print(f"Getting capacity for all ENTSOE zones at {target_datetime}")
     fetch_and_update_entsoe_capacities(target_datetime)
+    update_aggregated_capacities(target_datetime)
     for zone in ENTSOE_ZONES:
         print(f"Updated {zone}.yaml with capacity for {target_datetime} in config/zones.")
+    print(f"Updated aggregated zones with capacity for {target_datetime} in config/zones.")
 
 if __name__ == "__main__":
-    fetch_capacity("NO-NO1", datetime(2023,5,1))
+    main()
