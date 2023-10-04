@@ -99,7 +99,7 @@ def update_zone(zone_key: ZoneKey, data: dict) -> None:
     _new_zone_config["capacity"] = {
         k: _new_zone_config["capacity"][k] for k in sorted(_new_zone_config["capacity"])
     }
-    breakpoint()
+
     ZONES_CONFIG[zone_key] = _new_zone_config
 
     with open(
