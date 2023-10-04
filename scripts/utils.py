@@ -3,7 +3,14 @@
 import json
 import pathlib
 import subprocess
+from copy import deepcopy
 from os import PathLike, listdir, path
+
+import yaml
+
+from electricitymap.contrib.config import CONFIG_DIR
+from electricitymap.contrib.config.reading import read_zones_config
+from electricitymap.contrib.lib.types import ZoneKey
 
 ROOT_PATH = pathlib.Path(__file__).parent.parent
 LOCALES_FOLDER_PATH = ROOT_PATH / "web/public/locales/"
@@ -13,6 +20,7 @@ LOCALE_FILE_PATHS = [
     if path.isfile(LOCALES_FOLDER_PATH / f) and f.endswith(".json")
 ]
 
+ZONES_CONFIG = read_zones_config(CONFIG_DIR)
 
 def run_shell_command(cmd: str, cwd: PathLike | str = "") -> str:
     return subprocess.check_output(cmd, shell=True, encoding="utf8", cwd=cwd).rstrip(
@@ -56,3 +64,45 @@ class JsonFilePatcher:
             f.write("\n")
 
         print(f"🧹 Patched {self.file_path.relative_to(ROOT_PATH)}")
+
+
+
+def update_zone(zone_key: ZoneKey, data: dict) -> None:
+    if zone_key not in ZONES_CONFIG:
+        raise ValueError(f"Zone {zone_key} does not exist in the zones config")
+
+    _new_zone_config = deepcopy(ZONES_CONFIG[zone_key])
+
+    capacity = _new_zone_config["capacity"]
+
+    # if capacity data is not a dictionary with a datetime key
+    if not all(isinstance(v, dict) for v in capacity.values()):
+        capacity = data
+    else:
+        for mode in capacity:
+            if isinstance(capacity[mode], dict):
+                existing_capacity = capacity[mode]
+                if mode in data:
+                    if existing_capacity["datetime"] != data[mode]["datetime"]:
+                        capacity[mode] = [existing_capacity] + [data[mode]]
+            elif isinstance(capacity[mode], list):
+                if mode in data:
+                    if data[mode]["datetime"] not in [d["datetime"] for d in capacity[mode]]:
+                        capacity[mode].append([data[mode]])
+        new_modes = [m for m in data if m not in capacity]
+        for mode in new_modes:
+            capacity[mode] = data[mode]
+
+    _new_zone_config["capacity"] = capacity
+
+    # sort keys
+    _new_zone_config["capacity"] = {
+        k: _new_zone_config["capacity"][k] for k in sorted(_new_zone_config["capacity"])
+    }
+    breakpoint()
+    ZONES_CONFIG[zone_key] = _new_zone_config
+
+    with open(
+        CONFIG_DIR.joinpath(f"zones/{zone_key}.yaml"), "w", encoding="utf-8"
+    ) as f:
+        f.write(yaml.dump(_new_zone_config, default_flow_style=False))
