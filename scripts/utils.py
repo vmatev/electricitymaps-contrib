@@ -22,6 +22,7 @@ LOCALE_FILE_PATHS = [
 
 ZONES_CONFIG = read_zones_config(CONFIG_DIR)
 
+
 def run_shell_command(cmd: str, cwd: PathLike | str = "") -> str:
     return subprocess.check_output(cmd, shell=True, encoding="utf8", cwd=cwd).rstrip(
         "\n"
@@ -66,7 +67,6 @@ class JsonFilePatcher:
         print(f"🧹 Patched {self.file_path.relative_to(ROOT_PATH)}")
 
 
-
 def update_zone(zone_key: ZoneKey, data: dict) -> None:
     if zone_key not in ZONES_CONFIG:
         raise ValueError(f"Zone {zone_key} does not exist in the zones config")
@@ -75,11 +75,14 @@ def update_zone(zone_key: ZoneKey, data: dict) -> None:
 
     capacity = _new_zone_config["capacity"]
 
-    if all(isinstance(capacity[m], float) or isinstance(capacity[m], int) for m in capacity.keys()):
+    if all(
+        isinstance(capacity[m], float) or isinstance(capacity[m], int)
+        for m in capacity.keys()
+    ):
         capacity = data
     else:
         for mode in capacity:
-            if (isinstance(capacity[mode], float) or isinstance(capacity[mode], int)):
+            if isinstance(capacity[mode], float) or isinstance(capacity[mode], int):
                 if mode in data:
                     capacity[mode] = data[mode]
             elif isinstance(capacity[mode], dict):
@@ -89,7 +92,9 @@ def update_zone(zone_key: ZoneKey, data: dict) -> None:
                         capacity[mode] = [existing_capacity] + [data[mode]]
             elif isinstance(capacity[mode], list):
                 if mode in data:
-                    if data[mode]["datetime"] not in [d["datetime"] for d in capacity[mode]]:
+                    if data[mode]["datetime"] not in [
+                        d["datetime"] for d in capacity[mode]
+                    ]:
                         capacity[mode].append(data[mode])
         new_modes = [m for m in data if m not in capacity]
         for mode in new_modes:
