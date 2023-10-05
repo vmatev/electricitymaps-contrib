@@ -8,7 +8,12 @@ from requests import Response, Session
 from electricitymap.contrib.config import ZONES_CONFIG, ZoneKey
 from parsers.EIA import REGIONS
 from parsers.lib.utils import get_token
-from scripts.utils import ROOT_PATH, run_shell_command, update_zone
+from scripts.utils import (
+    ROOT_PATH,
+    convert_datetime_str_to_isoformat,
+    run_shell_command,
+    update_zone,
+)
 
 CAPACITY_URL = "https://api.eia.gov/v2/electricity/operating-generator-capacity/data/?frequency=monthly&data[0]=nameplate-capacity-mw&facets[balancing_authority_code][]={}"
 API_KEY = get_token("EIA_KEY")
@@ -86,14 +91,14 @@ def format_capacity(df: pd.DataFrame, target_datetime: datetime) -> dict:
 def fetch_and_update_capacity_for_one_zone(
     zone_key: ZoneKey, target_datetime: str
 ) -> None:
-    target_datetime = datetime.fromisoformat(target_datetime)
+    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = fetch_capacity(zone_key, target_datetime)
     if zone_key in ZONES_CONFIG:
         update_zone(zone_key, zone_capacity)
 
 
 def fetch_and_update_all_eia_capacity(target_datetime: str) -> pd.DataFrame:
-    target_datetime = datetime.fromisoformat(target_datetime)
+    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in US_ZONES:
         zone_capacity = fetch_capacity(zone, target_datetime)
         if zone in ZONES_CONFIG:

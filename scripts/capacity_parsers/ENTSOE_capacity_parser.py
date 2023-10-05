@@ -6,7 +6,13 @@ from requests import Session
 
 from electricitymap.contrib.config import ZoneKey
 from parsers.ENTSOE import ENTSOE_DOMAIN_MAPPINGS, query_ENTSOE
-from scripts.utils import ROOT_PATH, run_shell_command, update_zone
+from scripts.capacity_parsers.constants import AGGREGATED_ZONE_MAPPING, ENTSOE_ZONES
+from scripts.utils import (
+    ROOT_PATH,
+    convert_datetime_str_to_isoformat,
+    run_shell_command,
+    update_zone,
+)
 
 """
 Update capacity configurations for ENTOS-E zones for a chosen year.
@@ -48,12 +54,6 @@ ENTSOE_PARAMETER_TO_MODE = {
     "B18": "wind",
     "B19": "wind",
     "B20": "unknown",
-}
-
-ENTSOE_ZONES = ["DK-DK1", "DK-DK2", "NO-NO1", "NO-NO2", "NO-NO3", "NO-NO4", "NO-NO5"]
-AGGREGATED_ZONE_MAPPING = {
-    "DK": ["DK-DK1", "DK-DK2"],
-    "NO": ["NO-NO1", "NO-NO2", "NO-NO3", "NO-NO4", "NO-NO5"],
 }
 
 
@@ -110,7 +110,7 @@ def fetch_capacity(zone_key: ZoneKey, target_datetime: datetime) -> dict:
 
 
 def fetch_and_update_entsoe_capacities(target_datetime: str) -> None:
-    target_datetime = datetime.fromisoformat(target_datetime)
+    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in ENTSOE_ZONES:
         zone_capacity = fetch_capacity(zone, target_datetime)
         update_zone(zone, zone_capacity)
@@ -118,7 +118,7 @@ def fetch_and_update_entsoe_capacities(target_datetime: str) -> None:
 
 
 def update_aggregated_capacities(target_datetime: datetime) -> None:
-    target_datetime = datetime.fromisoformat(target_datetime)
+    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in AGGREGATED_ZONE_MAPPING:
         zone_capacity_list = []
         for subzone in AGGREGATED_ZONE_MAPPING[zone]:

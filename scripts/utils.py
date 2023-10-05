@@ -4,6 +4,7 @@ import json
 import pathlib
 import subprocess
 from copy import deepcopy
+from datetime import datetime
 from os import PathLike, listdir, path
 
 import yaml
@@ -113,3 +114,7 @@ def update_zone(zone_key: ZoneKey, data: dict) -> None:
         CONFIG_DIR.joinpath(f"zones/{zone_key}.yaml"), "w", encoding="utf-8"
     ) as f:
         f.write(yaml.dump(_new_zone_config, default_flow_style=False))
+
+
+def convert_datetime_str_to_isoformat(datetime_str: str) -> str:
+    return datetime.fromisoformat(datetime_str)
