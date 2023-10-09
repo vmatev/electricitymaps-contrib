@@ -67,11 +67,10 @@ EMBER_ZONES = [
     "ZA",
 ]
 
-ENTSOE_ZONES = [
+ENTSOE_ZONES = [ "AL",
     "AT",
     "BE",
     "BG",
-    "CY",
     "CZ",
     "DE",
     "DK-DK1",
@@ -86,7 +85,9 @@ ENTSOE_ZONES = [
     "LT",
     "LU",
     "LV",
-    "MT",
+    # "MT",
+    "ME",
+    "MK",
     "NL",
     "NO-NO1",
     "NO-NO2",
@@ -98,6 +99,7 @@ ENTSOE_ZONES = [
     "RO",
     "SI",
     "SK",
+    "RS", "XK"
 ]
 AGGREGATED_ZONE_MAPPING = {
     "DK": ["DK-DK1", "DK-DK2"],

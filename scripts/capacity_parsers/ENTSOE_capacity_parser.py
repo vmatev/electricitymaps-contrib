@@ -87,7 +87,7 @@ def fetch_capacity(zone_key: ZoneKey, target_datetime: datetime) -> dict:
             timeseries.find_all("mktpsrtype")[0].find_all("psrtype")[0].contents[0]
         )
         end_date = datetime.strptime(
-            timeseries.find_all("end")[0].contents[0], "%Y-%m-%dT23:00Z"
+            timeseries.find_all("end")[0].contents[0], "%Y-%m-%dT%H:00Z"
         )
         if end_date.year != target_datetime.year:
             pass  # query_ENTSOE fetches data for 2 years, so we need to filter out the data for the previous year
@@ -108,6 +108,24 @@ def fetch_capacity(zone_key: ZoneKey, target_datetime: datetime) -> dict:
         )
     return capacity_dict
 
+def fetch_all_capacity( target_datetime: datetime) -> dict:
+    capacity_dict = {}
+    for zone in ENTSOE_ZONES:
+        try:
+            zone_capacity = fetch_capacity(zone, target_datetime)
+            capacity_dict[zone] = zone_capacity
+            print(zone + "done")
+        except:
+            print(zone + "failed")
+            continue
+    import pandas as pd
+    all_capacity = pd.DataFrame()
+    for zone in capacity_dict:
+        df = pd.DataFrame.from_dict(capacity_dict[zone], orient='index')
+        df["zone"] = zone
+        all_capacity = pd.concat([all_capacity, df])
+    breakpoint()
+    return capacity_dict
 
 def fetch_and_update_entsoe_capacities(target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
@@ -159,4 +177,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    fetch_all_capacity(datetime(2022,1,1))
