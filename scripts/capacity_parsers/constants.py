@@ -1,3 +1,5 @@
+from electricitymap.contrib.config import ZONES_CONFIG
+
 EMBER_ZONES = [
     "AL",
     "AR",
@@ -102,8 +104,9 @@ ENTSOE_ZONES = [ "AL",
     "RS", "XK"
 ]
 AGGREGATED_ZONE_MAPPING = {
-    "DK": ["DK-DK1", "DK-DK2"],
-    "NO": ["NO-NO1", "NO-NO2", "NO-NO3", "NO-NO4", "NO-NO5"],
+    "DK": ZONES_CONFIG["DK"]["subZoneNames"],
+    "NO":  ZONES_CONFIG["NO"]["subZoneNames"],
+
 }
 
 IRENA_ZONES = {

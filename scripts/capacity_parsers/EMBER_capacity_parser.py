@@ -102,10 +102,10 @@ def fetch_and_update_capacity_for_one_ember_zone(path:str, target_datetime:str, 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("path", help="The path to the csv file")
-    parser.add_argument("zone", help="The zone to get capacity for")
+    parser.add_argument("--path", help="The path to the csv file")
+    parser.add_argument("--zone", help="The zone to get capacity for", default=None)
     parser.add_argument(
-        "target_datetime", help="The target_datetime to get capacity for"
+        "--target_datetime", help="The target_datetime to get capacity for"
     )
     args = parser.parse_args()
     path = args.path
@@ -113,7 +113,7 @@ def main():
     target_datetime = args.target_datetime
 
     print(f"Getting capacity for {zone} at {target_datetime}")
-    if zone == "all zones":
+    if zone is None:
         fetch_and_update_capacity_for_all_ember_zones(path, target_datetime)
     else:
         fetch_and_update_capacity_for_one_ember_zone(path, target_datetime, zone)

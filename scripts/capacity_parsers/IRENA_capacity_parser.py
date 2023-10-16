@@ -33,7 +33,7 @@ IRENA_MODE_MAPPING = {
 }
 
 
-def fetch_capacity_from_csv(path: str, zone: ZoneKey, target_datetime: datetime):
+def fetch_capacity_from_excel(path: str, zone: ZoneKey, target_datetime: datetime):
     df = pd.read_excel(path, skipfooter=26)
     df = df.rename(
         columns={
@@ -49,14 +49,16 @@ def fetch_capacity_from_csv(path: str, zone: ZoneKey, target_datetime: datetime)
     df = df.dropna(axis=0, how="all")
 
     df_filtered = df.loc[df["country"].isin(list(IRENA_ZONES.keys()))]
+    df_filtered["mode"] = df_filtered["mode"].map(IRENA_MODE_MAPPING)
+    df_filtered = df_filtered.dropna(axis=0, how="any")
     df_filtered = (
         df_filtered.groupby(["country", "mode", "year"])[["value"]].sum().reset_index()
     )
-    breakpoint()
+    return df_filtered
 
 
 if __name__ == "__main__":
-    fetch_capacity_from_csv(
+    fetch_capacity_from_excel(
         "/Users/mathildedaugy/Repos/csvs/ELECCAP_20231005-122235.xlsx",
         "FR",
         datetime(2022, 1, 1),
