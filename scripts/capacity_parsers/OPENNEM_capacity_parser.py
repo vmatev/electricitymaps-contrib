@@ -13,6 +13,8 @@ from scripts.utils import (
     update_zone,
 )
 
+"""Disclaimer: only works for real-time data. There is retired capacity included but we do not have the information on when the capacity was retired."""
+
 REGION_MAPPING = {ZONE_KEY_TO_REGION[key]:key for key in ZONE_KEY_TO_REGION} # NT only has solar capacity so it will be excluded
 
 FUEL_MAPPING = {
@@ -85,7 +87,7 @@ def get_capacity_for_all_zones(target_datetime: datetime):
         capacity[zone] = zone_capacity
     return capacity
 
-def get_capacity_data_for_one_zone(zone_key:ZoneKey, target_datetime: str):
+def get_capacity_for_one_zone(zone_key:ZoneKey, target_datetime: str):
     return get_capacity_for_all_zones(target_datetime)[zone_key]
 
 def get_and_update_capacity_for_all_zones(target_datetime: str):
@@ -96,7 +98,7 @@ def get_and_update_capacity_for_all_zones(target_datetime: str):
 
 def get_and_update_capacity_for_one_zone(zone_key:ZoneKey, target_datetime: str):
     target_datetime = convert_datetime_str_to_isoformat(target_datetime).replace(tzinfo=timezone.utc)
-    capacity = get_capacity_data_for_one_zone(zone_key, target_datetime)
+    capacity = get_capacity_for_one_zone(zone_key, target_datetime)
     update_zone(zone_key, capacity)
 
 
