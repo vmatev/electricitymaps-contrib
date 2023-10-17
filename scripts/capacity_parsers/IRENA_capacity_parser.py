@@ -16,24 +16,26 @@ from scripts.utils import (
 )
 
 IRENA_MODE_MAPPING = {
-    "Biogas":"biomass",
-    "Geothermal energy":"geothermal",
-    "Liquid biofuels":"biomass",
-    "Marine energy":"unknown",
-    "Mixed Hydro Plants":"hydro",
-    "Offshore wind energy":"wind",
-    "Onshore wind energy":"wind",
-    "Other non-renewable energy":"unknown",
-    "Pumped storage":"hydro storage",
-    "Renewable hydropower":"hydro",
-    "Renewable municipal waste":"biomass",
-    "Solar photovoltaic":"solar",
-    "Solar thermal energy":"solar",
-    "Solid biofuels":"biomass",
+    "Biogas": "biomass",
+    "Geothermal energy": "geothermal",
+    "Liquid biofuels": "biomass",
+    "Marine energy": "unknown",
+    "Mixed Hydro Plants": "hydro",
+    "Offshore wind energy": "wind",
+    "Onshore wind energy": "wind",
+    "Other non-renewable energy": "unknown",
+    "Pumped storage": "hydro storage",
+    "Renewable hydropower": "hydro",
+    "Renewable municipal waste": "biomass",
+    "Solar photovoltaic": "solar",
+    "Solar thermal energy": "solar",
+    "Solid biofuels": "biomass",
 }
 
 
-def fetch_capacity_from_excel(path: str, zone: ZoneKey, target_datetime: datetime):
+def fetch_capacity_from_excel(
+    path: str, zone: ZoneKey, target_datetime: datetime
+) -> dict:
     df = pd.read_excel(path, skipfooter=26)
     df = df.rename(
         columns={
@@ -54,12 +56,37 @@ def fetch_capacity_from_excel(path: str, zone: ZoneKey, target_datetime: datetim
     df_filtered = (
         df_filtered.groupby(["country", "mode", "year"])[["value"]].sum().reset_index()
     )
-    return df_filtered
+    capacity_dict = format_capacity(zone, target_datetime, df_filtered)
 
+    return capacity_dict
+
+
+def format_capacity(
+    zone_key: ZoneKey, target_datetime: datetime, data: pd.DataFrame
+) -> dict:
+    df = data.copy()
+    # filter by target_datetime.year
+    df = df.loc[df["year"] == target_datetime.year]
+    # filter by zone_key
+    country = pycountry.countries.get(alpha_2=zone_key.split("-")[0]).name
+    df = df.loc[df["country"].str.contains(country)]
+    if df.empty:
+        raise ValueError(f"No data for year {target_datetime.year} and zone {zone_key}")
+    capacity = {}
+    for idx, data in df.iterrows():
+        mode_dict = {}
+        mode_dict["value"] = float(data["value"])
+        mode_dict["source"] = "IRENA"
+        mode_dict["datetime"] = target_datetime.strftime("%Y-%m-%d")
+        capacity[data["mode"]] = mode_dict
+    return capacity
+
+
+# TODO: compare renewable breakdown with Ember and merge two sources
 
 if __name__ == "__main__":
-    fetch_capacity_from_excel(
+    print(fetch_capacity_from_excel(
         "/Users/mathildedaugy/Repos/csvs/ELECCAP_20231005-122235.xlsx",
         "FR",
         datetime(2022, 1, 1),
-    )
+    ))

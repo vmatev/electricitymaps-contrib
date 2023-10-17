@@ -69,7 +69,6 @@ def format_ember_data(df: pd.DataFrame, year: int) -> pd.DataFrame:
         .reset_index()
         .set_index(["zone_key"])
     )
-    breakpoint()
     return df_capacity
 
 
@@ -97,7 +96,8 @@ def fetch_and_update_capacity_for_all_ember_zones(path:str, target_datetime:str)
 def fetch_and_update_capacity_for_one_ember_zone(path:str, target_datetime:str, zone:ZoneKey) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_data_from_csv(path, target_datetime.year)
-    update_zone(zone, all_capacity[zone])
+    zone_capacity = all_capacity[zone]
+    update_zone(zone, zone_capacity)
     print(f"Updated capacity for {zone} in {target_datetime.year}")
 
 def main():
