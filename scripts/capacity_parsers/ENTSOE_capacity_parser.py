@@ -77,7 +77,7 @@ def query_capacity(
     )
 
 
-def fetch_capacity(zone_key: ZoneKey, target_datetime: datetime) -> dict:
+def get_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: datetime) -> dict:
     xml_str = query_capacity(
         ENTSOE_DOMAIN_MAPPINGS[zone_key], Session(), target_datetime
     )
@@ -114,7 +114,7 @@ def fetch_all_capacity(target_datetime: datetime) -> dict:
     capacity_dict = {}
     for zone in ENTSOE_ZONES:
         try:
-            zone_capacity = fetch_capacity(zone, target_datetime)
+            zone_capacity = get_capacity_for_one_zone(zone, target_datetime)
             capacity_dict[zone] = zone_capacity
             print(f"Updated capacity for {zone} on {target_datetime.date()}")
         except:
@@ -123,16 +123,16 @@ def fetch_all_capacity(target_datetime: datetime) -> dict:
 
     return capacity_dict
 
-def fetch_and_update_all_entsoe_capacities(target_datetime: str) -> None:
+def get_and_update_capacity_for_all_zones(target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in ENTSOE_ZONES:
-        zone_capacity = fetch_capacity(zone, target_datetime)
+        zone_capacity = get_capacity_for_one_zone(zone, target_datetime)
         update_zone(zone, zone_capacity)
         print(f"Updated capacity for {zone} on {target_datetime.date()}")
 
-def fetch_and_update_entsoe_capacities(zone_key:ZoneKey, target_datetime: str) -> None:
+def get_and_update_capacity_for_one_zone(zone_key:ZoneKey, target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    zone_capacity = fetch_capacity(zone_key, target_datetime)
+    zone_capacity = get_capacity_for_one_zone(zone_key, target_datetime)
     update_zone(zone_key, zone_capacity)
     print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
 
@@ -148,12 +148,12 @@ def update_aggregated_zone_capacities(zone_capacity_list:List[Dict[str,float]]):
                 aggregated_zone_capacity[mode] = subzone_capacity[mode]
     return aggregated_zone_capacity
 
-def fetch_and_update_aggregated_capacities(target_datetime: str) -> None:
+def gets_and_update_aggregated_capacities(target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in AGGREGATED_ZONE_MAPPING:
         zone_capacity_list = []
         for subzone in AGGREGATED_ZONE_MAPPING[zone]:
-            zone_capacity_list.append(fetch_capacity(subzone, target_datetime))
+            zone_capacity_list.append(get_capacity_for_one_zone(subzone, target_datetime))
         aggregated_zone_capacity = update_aggregated_zone_capacities(zone_capacity_list)
         update_zone(zone, aggregated_zone_capacity)
 
@@ -199,14 +199,14 @@ def main():
 
     if zone is None:
         print(f"Getting capacity for all ENTSOE zones at {target_datetime}")
-        fetch_and_update_all_entsoe_capacities(target_datetime)
+        get_and_update_capacity_for_all_zones(target_datetime)
         for zone in AGGREGATED_ZONE_MAPPING:
             update_aggregated_capacities(zone, target_datetime)
             print(
             f"Updated aggregated zone {zone} with capacity for {target_datetime} in config/zones."
             )
     else:
-        fetch_and_update_entsoe_capacities(zone, target_datetime)
+        get_and_update_capacity_for_one_zone(zone, target_datetime)
         print(
             f"Updated {zone}.yaml with capacity for {target_datetime} in config/zones."
         )

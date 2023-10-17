@@ -88,7 +88,7 @@ def format_capacity(df: pd.DataFrame, target_datetime: datetime) -> dict:
     return capacity_dict
 
 
-def fetch_and_update_capacity_for_one_eia_zone(
+def get_and_update_capacity_for_one_zone(
     zone_key: ZoneKey, target_datetime: str
 ) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
@@ -97,7 +97,7 @@ def fetch_and_update_capacity_for_one_eia_zone(
         update_zone(zone_key, zone_capacity)
 
 
-def fetch_and_update_all_eia_capacity(target_datetime: str) -> pd.DataFrame:
+def get_and_update_capacity_for_all_zones(target_datetime: str) -> pd.DataFrame:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in US_ZONES:
         zone_capacity = fetch_capacity(zone, target_datetime)
@@ -120,9 +120,9 @@ def main():
 
     print(f"Getting capacity for {zone} at {target_datetime}")
     if zone is None:
-        fetch_and_update_all_eia_capacity(target_datetime)
+        get_and_update_capacity_for_all_zones(target_datetime)
     else:
-        fetch_and_update_capacity_for_one_eia_zone(zone, target_datetime)
+        get_and_update_capacity_for_one_zone(zone, target_datetime)
 
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
 
