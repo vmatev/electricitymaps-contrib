@@ -75,9 +75,11 @@ def main():
     target_datetime = args.target_datetime
     zone = args.zone
 
-    if zone is None or zone == "CL-SEN":
-        print(f"Getting capacity for {zone} at {target_datetime}")
-        get_and_update_capacity_for_one_zone(zone, target_datetime)
+    if zone is None:
+        zone ="CL-SEN"
+
+    print(f"Getting capacity for {zone} at {target_datetime}")
+    get_and_update_capacity_for_one_zone(zone, target_datetime)
 
     print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
