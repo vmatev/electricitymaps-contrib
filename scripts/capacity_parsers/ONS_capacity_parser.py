@@ -11,6 +11,7 @@ from scripts.utils import (
     update_zone,
 )
 
+"""Disclaimer: this parser does not include distributed capacity. Solar capacity is much lower than in reality because the majority is distributed."""
 CAPACITY_URL = "https://ons-dl-prod-opendata.s3.amazonaws.com/dataset/capacidade-geracao/CAPACIDADE_GERACAO.csv"
 MODE_MAPPING = {
     "HIDRÁULICA": "hydro",
@@ -18,12 +19,12 @@ MODE_MAPPING = {
     "ÓLEO COMBUSTÍVEL": "unknown",
     "MULTI-COMBUSTÍVEL GÁS/DIESEL": "unknown",
     "MULTI-COMBUSTÍVEL DIESEL/ÓLEO": "unknown",
-    "GÁS": "gas",
+    "GÁS": "unknown",
     "RESÍDUO CICLO COMBINADO": "unknown",
     "EÓLICA": "wind",
     "CARVÃO": "unknown",
     "BIOMASSA": "unknown",
-    "NUCLEAR": "nucler",
+    "NUCLEAR": "nuclear",
     "RESÍDUOS INDUSTRIAIS": "unknown",
     "FOTOVOLTAICA": "solar",
 }
@@ -71,7 +72,7 @@ def get_capacity_for_all_zones(target_datetime: str) -> pd.DataFrame:
     df["zone_key"] = df["zone_key"].map(REGION_MAPPING)
 
     df = df.groupby(["zone_key", "mode", "datetime"])[["value"]].sum().reset_index()
-
+    breakpoint()
     capacity = {}
     for zone in df["zone_key"].unique():
         zone_capacity_df = df.loc[df["zone_key"] == zone]
@@ -136,6 +137,8 @@ def main():
     else:
         print(f"Getting capacity for {zone} at {target_datetime}")
         get_and_update_capacity_for_one_zone(zone, target_datetime)
+
+    print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
 
 

@@ -217,6 +217,7 @@ def main():
             print(
                 f"Updated {parent_zone[0]}.yaml with capacity for {target_datetime} in config/zones."
             )
+    print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
 
 

@@ -112,17 +112,17 @@ def main():
     zone = args.zone
     target_datetime = args.target_datetime
 
-    print(f"Getting capacity for {zone} at {target_datetime}")
     if zone is None:
+        print(f"Getting capacity for all zones at {target_datetime}")
         get_and_update_capacity_for_all_zones(path, target_datetime)
     else:
+        print(f"Getting capacity for {zone} at {target_datetime}")
         get_and_update_capacity_for_one_zone(path, target_datetime, zone)
 
+    print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
 
-    print(
-        f"Updated yaml configuration for {zone} with capacity for {target_datetime} in config/zones."
-    )
+
 
 if __name__ == "__main__":
     main()
