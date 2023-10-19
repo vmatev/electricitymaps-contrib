@@ -105,10 +105,10 @@ def capacity_parser(
         if data_path is None:
             raise ValueError("data_path must be specified for EMBER zones")
         parser = CAPACITY_PARSERS[zone]
-        parser(target_datetime, data_path, zone)
+        parser(target_datetime=target_datetime, path=data_path, zone_key=zone)
     else:
         parser = CAPACITY_PARSERS[zone]
-        parser(zone, target_datetime)
+        parser(zone_key=zone, target_datetime=target_datetime)
 
     print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
