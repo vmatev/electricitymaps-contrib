@@ -103,7 +103,7 @@ def get_capacity_for_all_zones(target_datetime: datetime):
         for idx, data in zone_capacity_df.iterrows():
             zone_capacity[data["mode"]] = {
                 "datetime": target_datetime.strftime("%Y-%m-%d"),
-                "value": round(data["value"],2),
+                "value": round(data["value"], 2),
                 "source": SOURCE,
             }
         capacity[zone] = zone_capacity
@@ -151,7 +151,7 @@ def get_solar_capacity_au_nt(target_datetime: str):
     for idx, data in capacity_df.iterrows():
         capacity[data["mode"]] = {
             "datetime": target_datetime.strftime("%Y-%m-%d"),
-            "value": round(data["value"],2),
+            "value": round(data["value"], 2),
             "source": SOURCE,
         }
     return capacity
