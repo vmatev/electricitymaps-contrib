@@ -97,7 +97,7 @@ def get_and_update_capacity_for_one_zone(
         update_zone(zone_key, zone_capacity)
 
 
-def get_and_update_capacity_for_all_zones(target_datetime: str) -> pd.DataFrame:
+def get_and_update_capacity_for_all_zones(target_datetime: str, zone_key:ZoneKey=None) -> pd.DataFrame:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in US_ZONES:
         zone_capacity = fetch_capacity(zone, target_datetime)

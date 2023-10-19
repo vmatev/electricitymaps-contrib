@@ -72,7 +72,7 @@ def get_capacity_for_all_zones(target_datetime: str) -> pd.DataFrame:
     df["zone_key"] = df["zone_key"].map(REGION_MAPPING)
 
     df = df.groupby(["zone_key", "mode", "datetime"])[["value"]].sum().reset_index()
-    breakpoint()
+
     capacity = {}
     for zone in df["zone_key"].unique():
         zone_capacity_df = df.loc[df["zone_key"] == zone]

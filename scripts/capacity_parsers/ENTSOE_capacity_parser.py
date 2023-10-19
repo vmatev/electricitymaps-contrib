@@ -123,7 +123,7 @@ def fetch_all_capacity(target_datetime: datetime) -> dict:
 
     return capacity_dict
 
-def get_and_update_capacity_for_all_zones(target_datetime: str) -> None:
+def get_and_update_capacity_for_all_zones(target_datetime: str,zone_key:ZoneKey=None) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in ENTSOE_ZONES:
         zone_capacity = get_capacity_for_one_zone(zone, target_datetime)
@@ -181,7 +181,7 @@ def update_aggregated_capacities(zone_key: ZoneKey, target_datetime: datetime) -
         zone_capacity_list.append(zone_capacity)
 
     aggregated_zone_capacity = update_aggregated_zone_capacities(zone_capacity_list)
-    breakpoint()
+
     update_zone(zone_key, aggregated_zone_capacity)
 
 
@@ -212,7 +212,7 @@ def main():
         )
         if any(zone in i for i in list(AGGREGATED_ZONE_MAPPING.values())):
             parent_zone = [item[0] for item in AGGREGATED_ZONE_MAPPING.items() if zone in item[1]]
-            breakpoint()
+
             update_aggregated_capacities(parent_zone[0], "2022-01-01")
             print(
                 f"Updated {parent_zone[0]}.yaml with capacity for {target_datetime} in config/zones."

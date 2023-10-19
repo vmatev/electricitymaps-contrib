@@ -7,7 +7,6 @@ EMBER_ZONES = [
     "AW",
     "BA",
     "BD",
-    "BE",
     "BG",
     "BO",
     "CH",
@@ -20,7 +19,6 @@ EMBER_ZONES = [
     "EE",
     "ES",
     "FI",
-    "FR",
     "GB",
     "GE",
     "GF",
@@ -106,6 +104,9 @@ ENTSOE_ZONES = [ "AL",
 AGGREGATED_ZONE_MAPPING = {
     "DK": ZONES_CONFIG["DK"]["subZoneNames"],
     "NO":  ZONES_CONFIG["NO"]["subZoneNames"],
+    "BR": ZONES_CONFIG["BR"]["subZoneNames"],
+    "AU": ZONES_CONFIG["AU"]["subZoneNames"],
+    "US": ZONES_CONFIG["US"]["subZoneNames"],
 
 }
 
@@ -186,3 +187,5 @@ IRENA_ZONES = {
     "United Kingdom of Great Britain and Northern Ireland (the)": "GB",
     "Uruguay": "UY",
 }
+
+EIA_ZONES = [zone for zone in ZONES_CONFIG if zone.startswith("US-") and "parsers" in ZONES_CONFIG[zone]]
