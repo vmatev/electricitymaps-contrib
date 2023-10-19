@@ -31,12 +31,10 @@ basicConfig(level=DEBUG, format="%(asctime)s %(levelname)-8s %(name)-30s %(messa
 
 
 def populate_capacity_parsers():
-    capacity_parsers ={}
+    capacity_parsers = {}
     for zone in EMBER_ZONES:
         capacity_parsers[zone] = getattr(
-            importlib.import_module(
-                "scripts.capacity_parsers.EMBER_capacity_parser"
-            ),
+            importlib.import_module("scripts.capacity_parsers.EMBER_capacity_parser"),
             "get_and_update_capacity_for_one_zone",
         )
     for zone in ENTSOE_ZONES:
@@ -83,10 +81,15 @@ def populate_capacity_parsers():
         importlib.import_module("scripts.capacity_parsers.CA_QC_capacity_parser"),
         "get_and_update_capacity_for_one_zone",
     )
+    capacity_parsers["MY-WM"] = getattr(
+        importlib.import_module("scripts.capacity_parsers.GSO_capacity_parser"),
+        "get_and_update_capacity_for_one_zone",
+    )
     return capacity_parsers
 
 
 CAPACITY_PARSERS = populate_capacity_parsers()
+
 
 @click.command()
 @click.option("--zone", show_default=True)
@@ -101,7 +104,7 @@ def capacity_parser(
 ):
     """ """
 
-    if (zone =="EMBER" or zone in EMBER_ZONES ):
+    if zone == "EMBER" or zone in EMBER_ZONES:
         if data_path is None:
             raise ValueError("data_path must be specified for EMBER zones")
         parser = CAPACITY_PARSERS[zone]

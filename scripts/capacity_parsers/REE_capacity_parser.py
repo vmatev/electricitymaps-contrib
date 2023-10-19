@@ -3,6 +3,7 @@ from datetime import datetime
 from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
+from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 MODE_MAPPING = {
     "Hidráulica": "hydro",
@@ -56,6 +57,15 @@ def get_capacity_data(zone_key: ZoneKey, target_datetime: datetime):
         return capacity
     else:
         raise ValueError(f"{zone_key}: No capacity data available for year {target_datetime.year}")
+
+def get_and_update_capacity_for_one_zone(
+    zone_key: ZoneKey, target_datetime: str
+) -> None:
+    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
+    zone_capacity = get_capacity_data(zone_key, target_datetime)
+    update_zone(zone_key, zone_capacity)
+    print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
+
 
 if __name__=="__main__":
     print(get_capacity_data("ES",datetime(2023,1,1)))

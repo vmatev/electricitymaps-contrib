@@ -1,73 +1,51 @@
 from electricitymap.contrib.config import ZONES_CONFIG
 
 EMBER_ZONES = [
-    "AL",
     "AR",
-    "AT",
     "AW",
     "BA",
     "BD",
-    "BG",
     "BO",
     "CH",
     "CO",
     "CR",
     "CY",
-    "CZ",
-    "DE",
     "DO",
-    "EE",
-    "ES",
-    "FI",
     "GB",
     "GE",
     "GF",
-    "GR",
     "GT",
     "HN",
-    "HR",
-    "HU",
-    "IE",
     "IL",
     "IQ",
     "IS",
     "KR",
     "KW",
     "LK",
-    "LT",
-    "LU",
-    "LV",
     "MD",
-    "ME",
-    "MK",
     "MN",
+    "MT"
     "MX",
     "NG",
     "NI",
-    "NL",
     "NO",
     "PA",
     "PE",
     "PF",
-    "PL",
-    "PT",
-    "RO",
-    "RS",
     "RU",
     "SG",
-    "SI",
-    "SK",
     "SV",
     "TH",
     "TR",
     "TW",
     "UA",
     "UY",
-    "XK",
     "ZA",
 ]
 
-ENTSOE_ZONES = [ "AL",
+
+ENTSOE_ZONES = [
+    "AL",
     "AT",
     "BE",
     "BG",
@@ -76,6 +54,7 @@ ENTSOE_ZONES = [ "AL",
     "DK-DK1",
     "DK-DK2",
     "EE",
+    "ES",
     "FI",
     "FR",
     "GR",
@@ -99,15 +78,15 @@ ENTSOE_ZONES = [ "AL",
     "RO",
     "SI",
     "SK",
-    "RS", "XK"
+    "RS",
+    "XK",
 ]
 AGGREGATED_ZONE_MAPPING = {
     "DK": ZONES_CONFIG["DK"]["subZoneNames"],
-    "NO":  ZONES_CONFIG["NO"]["subZoneNames"],
+    "NO": ZONES_CONFIG["NO"]["subZoneNames"],
     "BR": ZONES_CONFIG["BR"]["subZoneNames"],
     "AU": ZONES_CONFIG["AU"]["subZoneNames"],
     "US": ZONES_CONFIG["US"]["subZoneNames"],
-
 }
 
 IRENA_ZONES = {
@@ -188,4 +167,8 @@ IRENA_ZONES = {
     "Uruguay": "UY",
 }
 
-EIA_ZONES = [zone for zone in ZONES_CONFIG if zone.startswith("US-") and "parsers" in ZONES_CONFIG[zone]]
+EIA_ZONES = [
+    zone
+    for zone in ZONES_CONFIG
+    if zone.startswith("US-") and "parsers" in ZONES_CONFIG[zone]
+]

@@ -110,6 +110,7 @@ def get_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: datetime) -> d
         )
     return capacity_dict
 
+
 def fetch_all_capacity(target_datetime: datetime) -> dict:
     capacity_dict = {}
     for zone in ENTSOE_ZONES:
@@ -123,20 +124,27 @@ def fetch_all_capacity(target_datetime: datetime) -> dict:
 
     return capacity_dict
 
-def get_and_update_capacity_for_all_zones(target_datetime: str,zone_key:ZoneKey=None) -> None:
+
+def get_and_update_capacity_for_all_zones(
+    target_datetime: str, zone_key: ZoneKey = "ENTSOE"
+) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in ENTSOE_ZONES:
         zone_capacity = get_capacity_for_one_zone(zone, target_datetime)
         update_zone(zone, zone_capacity)
         print(f"Updated capacity for {zone} on {target_datetime.date()}")
 
-def get_and_update_capacity_for_one_zone(zone_key:ZoneKey, target_datetime: str) -> None:
+
+def get_and_update_capacity_for_one_zone(
+    zone_key: ZoneKey, target_datetime: str
+) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = get_capacity_for_one_zone(zone_key, target_datetime)
     update_zone(zone_key, zone_capacity)
     print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
 
-def update_aggregated_zone_capacities(zone_capacity_list:List[Dict[str,float]]):
+
+def update_aggregated_zone_capacities(zone_capacity_list: List[Dict[str, float]]):
     aggregated_zone_capacity = zone_capacity_list[0]
     for subzone_capacity in zone_capacity_list[1:]:
         for mode in subzone_capacity:
@@ -148,14 +156,18 @@ def update_aggregated_zone_capacities(zone_capacity_list:List[Dict[str,float]]):
                 aggregated_zone_capacity[mode] = subzone_capacity[mode]
     return aggregated_zone_capacity
 
+
 def gets_and_update_aggregated_capacities(target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in AGGREGATED_ZONE_MAPPING:
         zone_capacity_list = []
         for subzone in AGGREGATED_ZONE_MAPPING[zone]:
-            zone_capacity_list.append(get_capacity_for_one_zone(subzone, target_datetime))
+            zone_capacity_list.append(
+                get_capacity_for_one_zone(subzone, target_datetime)
+            )
         aggregated_zone_capacity = update_aggregated_zone_capacities(zone_capacity_list)
         update_zone(zone, aggregated_zone_capacity)
+
 
 def update_aggregated_capacities(zone_key: ZoneKey, target_datetime: datetime) -> None:
     ZONES_CONFIG = read_zones_config(CONFIG_DIR)
@@ -168,13 +180,15 @@ def update_aggregated_capacities(zone_key: ZoneKey, target_datetime: datetime) -
                 zone_capacity[mode] = zone_config_capacity[mode]
             elif type(zone_config_capacity[mode]) == list:
                 # return item in list that has the same datetime as target_datetime
-                i= 0
+                i = 0
                 while i < len(zone_config_capacity[mode]):
                     if zone_config_capacity[mode][i]["datetime"] == target_datetime:
                         zone_capacity[mode] = zone_config_capacity[mode][i]
                         break
                     i += 1
-            elif (type(zone_config_capacity[mode]) == float) or (type(zone_config_capacity[mode]) == int):
+            elif (type(zone_config_capacity[mode]) == float) or (
+                type(zone_config_capacity[mode]) == int
+            ):
                 zone_capacity[mode] = {}
                 zone_capacity[mode]["value"] = zone_config_capacity[mode]
 
@@ -183,8 +197,6 @@ def update_aggregated_capacities(zone_key: ZoneKey, target_datetime: datetime) -
     aggregated_zone_capacity = update_aggregated_zone_capacities(zone_capacity_list)
 
     update_zone(zone_key, aggregated_zone_capacity)
-
-
 
 
 def main():
@@ -203,7 +215,7 @@ def main():
         for zone in AGGREGATED_ZONE_MAPPING:
             update_aggregated_capacities(zone, target_datetime)
             print(
-            f"Updated aggregated zone {zone} with capacity for {target_datetime} in config/zones."
+                f"Updated aggregated zone {zone} with capacity for {target_datetime} in config/zones."
             )
     else:
         get_and_update_capacity_for_one_zone(zone, target_datetime)
@@ -211,7 +223,9 @@ def main():
             f"Updated {zone}.yaml with capacity for {target_datetime} in config/zones."
         )
         if any(zone in i for i in list(AGGREGATED_ZONE_MAPPING.values())):
-            parent_zone = [item[0] for item in AGGREGATED_ZONE_MAPPING.items() if zone in item[1]]
+            parent_zone = [
+                item[0] for item in AGGREGATED_ZONE_MAPPING.items() if zone in item[1]
+            ]
 
             update_aggregated_capacities(parent_zone[0], "2022-01-01")
             print(
@@ -219,7 +233,6 @@ def main():
             )
     print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
-
 
 
 if __name__ == "__main__":

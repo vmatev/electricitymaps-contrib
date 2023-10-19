@@ -86,7 +86,7 @@ def get_capacity_dict_from_df(df_capacity: pd.DataFrame) -> dict:
         all_capacity[zone] = zone_capacity
     return all_capacity
 
-def get_and_update_capacity_for_all_zones(path:str, target_datetime:str, zone:ZoneKey=None)-> None:
+def get_and_update_capacity_for_all_zones(path:str, target_datetime:str, zone_key:ZoneKey="EMBER")-> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_data_from_csv(path, target_datetime.year)
     for zone in all_capacity:
