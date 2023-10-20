@@ -34,7 +34,7 @@ SPECIFIC_ZONE_MAPPING = {
     "MN": { "Other Fossil": "coal"},
     "SG": { "Other Fossil": "coal"},
     "SV": { "Other Fossil": "oil"},
-    "TR": {"Other Renewables": "geothermal"},
+    "TR": {"Other Fossil": "oil","Other Renewables": "geothermal"},
     "TW": { "Other Fossil": "oil"},
     "ZA": { "Other Fossil": "oil"},}
 
