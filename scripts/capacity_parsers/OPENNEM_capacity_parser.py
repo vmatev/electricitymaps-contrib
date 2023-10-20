@@ -114,7 +114,7 @@ def get_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: str):
     return get_capacity_for_all_zones(target_datetime)[zone_key]
 
 
-def get_and_update_capacity_for_all_zones(target_datetime: str):
+def get_and_update_capacity_for_all_zones(target_datetime: str, zone_key: ZoneKey = "OPENNEM"):
     target_datetime = convert_datetime_str_to_isoformat(target_datetime).replace(
         tzinfo=timezone.utc
     )

@@ -18,6 +18,7 @@ from scripts.capacity_parsers.constants import (
     EIA_ZONES,
     EMBER_ZONES,
     ENTSOE_ZONES,
+    REE_ZONES,
 )
 from scripts.utils import (
     ROOT_PATH,
@@ -32,21 +33,8 @@ basicConfig(level=DEBUG, format="%(asctime)s %(levelname)-8s %(name)-30s %(messa
 
 def populate_capacity_parsers():
     capacity_parsers = {}
-    for zone in EMBER_ZONES:
-        capacity_parsers[zone] = getattr(
-            importlib.import_module("scripts.capacity_parsers.EMBER_capacity_parser"),
-            "get_and_update_capacity_for_one_zone",
-        )
-    for zone in ENTSOE_ZONES:
-        capacity_parsers[zone] = getattr(
-            importlib.import_module("scripts.capacity_parsers.ENTSOE_capacity_parser"),
-            "get_and_update_capacity_for_one_zone",
-        )
-    for zone in EIA_ZONES:
-        capacity_parsers[zone] = getattr(
-            importlib.import_module("scripts.capacity_parsers.EIA_capacity_parser"),
-            "get_and_update_capacity_for_one_zone",
-        )
+
+    # zone groups
     capacity_parsers["EMBER"] = getattr(
         importlib.import_module("scripts.capacity_parsers.EMBER_capacity_parser"),
         "get_and_update_capacity_for_all_zones",
@@ -59,10 +47,40 @@ def populate_capacity_parsers():
         importlib.import_module("scripts.capacity_parsers.EIA_capacity_parser"),
         "get_and_update_capacity_for_all_zones",
     )
-    capacity_parsers["CL-SEN"] = getattr(
-        importlib.import_module("scripts.capacity_parsers.CL_capacity_parser"),
-        "get_and_update_capacity_for_one_zone",
+    capacity_parsers["REE"] = getattr(
+        importlib.import_module("scripts.capacity_parsers.REE_capacity_parser"),
+        "get_and_update_capacity_for_all_zones",
     )
+    capacity_parsers["ONS"] = getattr(
+        importlib.import_module("scripts.capacity_parsers.ONS_capacity_parser"),
+        "get_and_update_capacity_for_all_zones",
+    )
+    capacity_parsers["OPENNEM"] = getattr(
+        importlib.import_module("scripts.capacity_parsers.OPENNEM_capacity_parser"),
+        "get_and_update_capacity_for_all_zones",
+    )
+
+    # individual zones
+    for zone in ENTSOE_ZONES:
+        capacity_parsers[zone] = getattr(
+            importlib.import_module("scripts.capacity_parsers.ENTSOE_capacity_parser"),
+            "get_and_update_capacity_for_one_zone",
+        )
+    for zone in EMBER_ZONES:
+        capacity_parsers[zone] = getattr(
+            importlib.import_module("scripts.capacity_parsers.EMBER_capacity_parser"),
+            "get_and_update_capacity_for_one_zone",
+        )
+    for zone in EIA_ZONES:
+        capacity_parsers[zone] = getattr(
+            importlib.import_module("scripts.capacity_parsers.EIA_capacity_parser"),
+            "get_and_update_capacity_for_one_zone",
+        )
+    for zone in REE_ZONES:
+        capacity_parsers[zone] = getattr(
+            importlib.import_module("scripts.capacity_parsers.REE_capacity_parser"),
+            "get_and_update_capacity_for_one_zone",
+        )
     for zone in AGGREGATED_ZONE_MAPPING["BR"]:
         capacity_parsers[zone] = getattr(
             importlib.import_module("scripts.capacity_parsers.ONS_capacity_parser"),
@@ -73,6 +91,10 @@ def populate_capacity_parsers():
             importlib.import_module("scripts.capacity_parsers.OPENNEM_capacity_parser"),
             "get_and_update_capacity_for_one_zone",
         )
+    capacity_parsers["CL-SEN"] = getattr(
+        importlib.import_module("scripts.capacity_parsers.CL_capacity_parser"),
+        "get_and_update_capacity_for_one_zone",
+    )
     capacity_parsers["CA-ON"] = getattr(
         importlib.import_module("scripts.capacity_parsers.CA_ON_capacity_parser"),
         "get_and_update_capacity_for_one_zone",
@@ -82,7 +104,7 @@ def populate_capacity_parsers():
         "get_and_update_capacity_for_one_zone",
     )
     capacity_parsers["MY-WM"] = getattr(
-        importlib.import_module("scripts.capacity_parsers.GSO_capacity_parser"),
+        importlib.import_module("scripts.capacity_parsers.MY-WM_capacity_parser"),
         "get_and_update_capacity_for_one_zone",
     )
     return capacity_parsers
@@ -103,7 +125,8 @@ def capacity_parser(
     data_path: str = None,
 ):
     """ """
-
+    if zone not in CAPACITY_PARSERS:
+        raise ValueError(f"No capacity parser developed for {zone}")
     if zone == "EMBER" or zone in EMBER_ZONES:
         if data_path is None:
             raise ValueError("data_path must be specified for EMBER zones")

@@ -172,3 +172,10 @@ EIA_ZONES = [
     for zone in ZONES_CONFIG
     if zone.startswith("US-") and "parsers" in ZONES_CONFIG[zone]
 ]
+
+REE_ZONES = [
+    zone
+    for zone in ZONES_CONFIG
+    if zone.startswith("ES") and "parsers" in ZONES_CONFIG[zone]
+]
+

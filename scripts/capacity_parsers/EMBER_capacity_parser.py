@@ -80,7 +80,7 @@ def get_capacity_dict_from_df(df_capacity: pd.DataFrame) -> dict:
         for i, data in df_zone.iterrows():
             mode_capacity = {}
             mode_capacity["datetime"] = data["datetime"].strftime("%Y-%m-%d")
-            mode_capacity["value"] = round(float(data["value"]),2)
+            mode_capacity["value"] = round(float(data["value"]),0)
             mode_capacity["source"] = "Ember, Yearly electricity data"
             zone_capacity[data["mode"]] = mode_capacity
         all_capacity[zone] = zone_capacity

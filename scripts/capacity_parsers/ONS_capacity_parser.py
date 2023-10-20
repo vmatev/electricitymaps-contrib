@@ -91,7 +91,7 @@ def get_capacity_for_one_zone(zone_key: str, target_datetime: str) -> pd.DataFra
     return get_capacity_for_all_zones(target_datetime)[zone_key]
 
 
-def get_and_update_capacity_for_all_zones(target_datetime: str):
+def get_and_update_capacity_for_all_zones(target_datetime: str, zone_key: ZoneKey = "ONS"):
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     capacity = get_capacity_for_all_zones(target_datetime)
     for zone in capacity:
