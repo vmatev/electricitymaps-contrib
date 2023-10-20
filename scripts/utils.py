@@ -73,33 +73,35 @@ def update_zone(zone_key: ZoneKey, data: dict) -> None:
         raise ValueError(f"Zone {zone_key} does not exist in the zones config")
 
     _new_zone_config = deepcopy(ZONES_CONFIG[zone_key])
+    if "capacity" in _new_zone_config:
+        capacity = _new_zone_config["capacity"]
 
-    capacity = _new_zone_config["capacity"]
-
-    if all(
-        isinstance(capacity[m], float) or isinstance(capacity[m], int)
-        for m in capacity.keys()
-    ):
-        capacity = data
+        if all(
+            isinstance(capacity[m], float) or isinstance(capacity[m], int)
+            for m in capacity.keys()
+        ):
+            capacity = data
+        else:
+            for mode in capacity:
+                if isinstance(capacity[mode], float) or isinstance(capacity[mode], int):
+                    if mode in data:
+                        capacity[mode] = data[mode]
+                elif isinstance(capacity[mode], dict):
+                    existing_capacity = capacity[mode]
+                    if mode in data:
+                        if existing_capacity["datetime"] != data[mode]["datetime"]:
+                            capacity[mode] = [existing_capacity] + [data[mode]]
+                elif isinstance(capacity[mode], list):
+                    if mode in data:
+                        if data[mode]["datetime"] not in [
+                            d["datetime"] for d in capacity[mode]
+                        ]:
+                            capacity[mode].append(data[mode])
+            new_modes = [m for m in data if m not in capacity]
+            for mode in new_modes:
+                capacity[mode] = data[mode]
     else:
-        for mode in capacity:
-            if isinstance(capacity[mode], float) or isinstance(capacity[mode], int):
-                if mode in data:
-                    capacity[mode] = data[mode]
-            elif isinstance(capacity[mode], dict):
-                existing_capacity = capacity[mode]
-                if mode in data:
-                    if existing_capacity["datetime"] != data[mode]["datetime"]:
-                        capacity[mode] = [existing_capacity] + [data[mode]]
-            elif isinstance(capacity[mode], list):
-                if mode in data:
-                    if data[mode]["datetime"] not in [
-                        d["datetime"] for d in capacity[mode]
-                    ]:
-                        capacity[mode].append(data[mode])
-        new_modes = [m for m in data if m not in capacity]
-        for mode in new_modes:
-            capacity[mode] = data[mode]
+        capacity = data
 
     _new_zone_config["capacity"] = capacity
 
