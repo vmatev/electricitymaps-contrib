@@ -19,12 +19,37 @@ EMBER_VARIABLE_TO_MODE = {
     "Gas": "gas",
     "Hydro": "hydro",
     "Nuclear": "nuclear",
-    "Other Fossil": "unknown",
+    "Other Fossil": "unknown", # mostly oil it seems
     "Other Renewables": "unknown",
     "Solar": "solar",
     "Wind": "wind",
 }
 
+SPECIFIC_ZONE_MAPPING = {
+    "BD": { "Other Fossil": "oil"},
+    "CO": { "Other Fossil": "oil"},
+    "CY": { "Other Fossil": "oil"},
+    "KR": { "Other Fossil": "oil"},
+    "KW": { "Other Fossil": "oil"},
+    "MN": { "Other Fossil": "coal"},
+    "SG": { "Other Fossil": "coal"},
+    "SV": { "Other Fossil": "oil"},
+    "TR": {"Other Renewables": "geothermal"},
+    "TW": { "Other Fossil": "oil"},
+    "ZA": { "Other Fossil": "oil"},}
+
+
+def map_variable_to_mode(row: pd.Series) -> pd.DataFrame:
+    zone = row["zone_key"]
+    variable = row["mode"]
+    if zone in SPECIFIC_ZONE_MAPPING:
+        if variable in SPECIFIC_ZONE_MAPPING[zone]:
+            row["mode"] = SPECIFIC_ZONE_MAPPING[zone][variable]
+        else:
+            row["mode"] = EMBER_VARIABLE_TO_MODE[variable]
+    else:
+        row["mode"] = EMBER_VARIABLE_TO_MODE[variable]
+    return row
 
 def get_data_from_csv(path: str, year:int) -> pd.DataFrame:
     df = pd.read_csv(path)
@@ -62,7 +87,9 @@ def format_ember_data(df: pd.DataFrame, year: int) -> pd.DataFrame:
     )
     df_capacity["datetime"] = df_capacity["datetime"].apply(lambda x: datetime(x, 1, 1))
     df_capacity["value"] = df_capacity["value"] * 1000
-    df_capacity["mode"] = df_capacity["mode"].map(EMBER_VARIABLE_TO_MODE)
+
+    df_capacity = df_capacity.apply(map_variable_to_mode, axis=1)
+
     df_capacity = (
         df_capacity.groupby(["zone_key", "datetime", "mode"])[["value"]]
         .sum()
@@ -93,12 +120,12 @@ def get_and_update_capacity_for_all_zones(path:str, target_datetime:str, zone_ke
         update_zone(zone, all_capacity[zone])
         print(f"Updated capacity for {zone} in {target_datetime.year}")
 
-def get_and_update_capacity_for_one_zone(path:str, target_datetime:str, zone:ZoneKey) -> None:
+def get_and_update_capacity_for_one_zone(path:str, target_datetime:str, zone_key:ZoneKey) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_data_from_csv(path, target_datetime.year)
-    zone_capacity = all_capacity[zone]
-    update_zone(zone, zone_capacity)
-    print(f"Updated capacity for {zone} in {target_datetime.year}")
+    zone_capacity = all_capacity[zone_key]
+    update_zone(zone_key, zone_capacity)
+    print(f"Updated capacity for {zone_key} in {target_datetime.year}")
 
 def main():
     parser = argparse.ArgumentParser()

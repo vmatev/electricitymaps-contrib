@@ -107,6 +107,10 @@ def populate_capacity_parsers():
         importlib.import_module("scripts.capacity_parsers.MY-WM_capacity_parser"),
         "get_and_update_capacity_for_one_zone",
     )
+    capacity_parsers["GB"] = getattr(
+        importlib.import_module("scripts.capacity_parsers.GB_capacity_parser"),
+        "get_and_update_capacity_for_one_zone",
+    )
     return capacity_parsers
 
 

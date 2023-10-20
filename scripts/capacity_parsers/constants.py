@@ -6,12 +6,11 @@ EMBER_ZONES = [
     "BA",
     "BD",
     "BO",
-    "CH",
+    "BY",
     "CO",
     "CR",
     "CY",
     "DO",
-    "GB",
     "GE",
     "GF",
     "GT",
@@ -24,11 +23,10 @@ EMBER_ZONES = [
     "LK",
     "MD",
     "MN",
-    "MT"
+    "MT",
     "MX",
     "NG",
     "NI",
-    "NO",
     "PA",
     "PE",
     "PF",
@@ -38,7 +36,6 @@ EMBER_ZONES = [
     "TH",
     "TR",
     "TW",
-    "UA",
     "UY",
     "ZA",
 ]
@@ -47,6 +44,7 @@ EMBER_ZONES = [
 ENTSOE_ZONES = [
     "AL",
     "AT",
+    "BA",
     "BE",
     "BG",
     "CZ",
@@ -80,6 +78,7 @@ ENTSOE_ZONES = [
     "SK",
     "RS",
     "XK",
+    "UA",
 ]
 AGGREGATED_ZONE_MAPPING = {
     "DK": ZONES_CONFIG["DK"]["subZoneNames"],
@@ -178,4 +177,3 @@ REE_ZONES = [
     for zone in ZONES_CONFIG
     if zone.startswith("ES") and "parsers" in ZONES_CONFIG[zone]
 ]
-
