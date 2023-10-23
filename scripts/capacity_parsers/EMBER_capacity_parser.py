@@ -25,7 +25,7 @@ EMBER_VARIABLE_TO_MODE = {
     "Wind": "wind",
 }
 
-SPECIFIC_ZONE_MAPPING = {
+SPECIFIC_MODE_MAPPING = {
     "BD": { "Other Fossil": "oil"},
     "CO": { "Other Fossil": "oil"},
     "CY": { "Other Fossil": "oil"},
@@ -42,9 +42,9 @@ SPECIFIC_ZONE_MAPPING = {
 def map_variable_to_mode(row: pd.Series) -> pd.DataFrame:
     zone = row["zone_key"]
     variable = row["mode"]
-    if zone in SPECIFIC_ZONE_MAPPING:
-        if variable in SPECIFIC_ZONE_MAPPING[zone]:
-            row["mode"] = SPECIFIC_ZONE_MAPPING[zone][variable]
+    if zone in SPECIFIC_MODE_MAPPING:
+        if variable in SPECIFIC_MODE_MAPPING[zone]:
+            row["mode"] = SPECIFIC_MODE_MAPPING[zone][variable]
         else:
             row["mode"] = EMBER_VARIABLE_TO_MODE[variable]
     else:

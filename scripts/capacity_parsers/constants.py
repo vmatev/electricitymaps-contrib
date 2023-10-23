@@ -88,7 +88,8 @@ AGGREGATED_ZONE_MAPPING = {
     "US": ZONES_CONFIG["US"]["subZoneNames"],
 }
 
-IRENA_ZONES = {
+IRENA_ZONES = ["IL", "IS", "LK","NI", "GF","PF"]
+IRENA_ZONES_MAPPING = {
     "Albania": "AL",
     "Argentina": "AR",
     "Aruba": "AW",

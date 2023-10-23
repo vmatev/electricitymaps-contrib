@@ -18,6 +18,7 @@ from scripts.capacity_parsers.constants import (
     EIA_ZONES,
     EMBER_ZONES,
     ENTSOE_ZONES,
+    IRENA_ZONES,
     REE_ZONES,
 )
 from scripts.utils import (
@@ -35,6 +36,10 @@ def populate_capacity_parsers():
     capacity_parsers = {}
 
     # zone groups
+    capacity_parsers["EIA"] = getattr(
+        importlib.import_module("scripts.capacity_parsers.EIA_capacity_parser"),
+        "get_and_update_capacity_for_all_zones",
+    )
     capacity_parsers["EMBER"] = getattr(
         importlib.import_module("scripts.capacity_parsers.EMBER_capacity_parser"),
         "get_and_update_capacity_for_all_zones",
@@ -43,8 +48,8 @@ def populate_capacity_parsers():
         importlib.import_module("scripts.capacity_parsers.ENTSOE_capacity_parser"),
         "get_and_update_capacity_for_all_zones",
     )
-    capacity_parsers["EIA"] = getattr(
-        importlib.import_module("scripts.capacity_parsers.EIA_capacity_parser"),
+    capacity_parsers["IRENA"] = getattr(
+        importlib.import_module("scripts.capacity_parsers.IRENA_capacity_parser"),
         "get_and_update_capacity_for_all_zones",
     )
     capacity_parsers["REE"] = getattr(
@@ -61,6 +66,11 @@ def populate_capacity_parsers():
     )
 
     # individual zones
+    for zone in EIA_ZONES:
+        capacity_parsers[zone] = getattr(
+            importlib.import_module("scripts.capacity_parsers.EIA_capacity_parser"),
+            "get_and_update_capacity_for_one_zone",
+        )
     for zone in ENTSOE_ZONES:
         capacity_parsers[zone] = getattr(
             importlib.import_module("scripts.capacity_parsers.ENTSOE_capacity_parser"),
@@ -71,9 +81,9 @@ def populate_capacity_parsers():
             importlib.import_module("scripts.capacity_parsers.EMBER_capacity_parser"),
             "get_and_update_capacity_for_one_zone",
         )
-    for zone in EIA_ZONES:
+    for zone in IRENA_ZONES:
         capacity_parsers[zone] = getattr(
-            importlib.import_module("scripts.capacity_parsers.EIA_capacity_parser"),
+            importlib.import_module("scripts.capacity_parsers.IRENA_capacity_parser"),
             "get_and_update_capacity_for_one_zone",
         )
     for zone in REE_ZONES:
@@ -118,8 +128,8 @@ CAPACITY_PARSERS = populate_capacity_parsers()
 
 
 @click.command()
-@click.option("--zone", show_default=True)
-@click.option("--target_datetime", show_default=True)
+@click.argument("zone")
+@click.argument("target_datetime")
 @click.option("--data_path", default=None, show_default=True)
 @click.option("--update_aggregate", default=False, show_default=True)
 def capacity_parser(
@@ -128,12 +138,24 @@ def capacity_parser(
     update_aggregate: bool = False,
     data_path: str = None,
 ):
-    """ """
+    """ Parameters
+    ----------
+    zone: a two letter zone from the map or a zone group (EIA, ENTSOE, EMBER, IRENA)
+    target_datetime: ISO 8601 string, such as 2018-05-30 15:00
+    data_path: path to the data file for EMBER or IRENA zones, must be specified if zone is EMBER or IRENA. The data is collected from a spreadsheet or csv previously downloaded
+    \n
+    Examples
+    -------
+    >>> poetry run capacity_parser FR "2022-01-01"
+    >>> poetry run capacity_parser EMBER "2022-01-01" --data_path="/../data.csv"
+    >>> poetry run capacity_parser ENTSOE "2022-01-01"
+    >>> poetry run capacity_parser EIA "2022-01-01"
+    """
     if zone not in CAPACITY_PARSERS:
         raise ValueError(f"No capacity parser developed for {zone}")
-    if zone == "EMBER" or zone in EMBER_ZONES:
+    if (zone in ["EMBER", "IRENA"]) or (zone in EMBER_ZONES + IRENA_ZONES):
         if data_path is None:
-            raise ValueError("data_path must be specified for EMBER zones")
+            raise ValueError("data_path must be specified for EMBER or IRENA zones")
         parser = CAPACITY_PARSERS[zone]
         parser(target_datetime=target_datetime, path=data_path, zone_key=zone)
     else:

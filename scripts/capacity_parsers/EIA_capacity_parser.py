@@ -1,6 +1,7 @@
 import argparse
 from datetime import datetime
 from logging import Logger, getLogger
+from typing import Dict, Union
 
 import pandas as pd
 from requests import Response, Session
@@ -15,6 +16,7 @@ from scripts.utils import (
     update_zone,
 )
 
+logger = getLogger(__name__)
 CAPACITY_URL = "https://api.eia.gov/v2/electricity/operating-generator-capacity/data/?frequency=monthly&data[0]=nameplate-capacity-mw&facets[balancing_authority_code][]={}"
 API_KEY = get_token("EIA_KEY")
 US_ZONES = {key: value for key, value in REGIONS.items() if key.startswith("US-")}
@@ -53,17 +55,12 @@ def fetch_capacity(
     zone_key: str,
     target_datetime: datetime,
     logger: Logger = getLogger(__name__),
-) -> pd.DataFrame:
+) -> Union[Dict, None]:
     url_prefix = CAPACITY_URL.format(REGIONS[zone_key])
     url = f'{url_prefix}&api_key={API_KEY}&start={target_datetime.strftime("%Y-%m")}-01&end={target_datetime.strftime("%Y-%m")}-12&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=5000'
     r: Response = Session().get(url)
     json_data = r.json()
-    if json_data.get("response", {}).get("data", []) == []:
-        logger.warning(
-            f"Failed to fetch capacity data for {zone_key} at {target_datetime.strftime('%Y-%m')}"
-        )
-        return pd.DataFrame()
-    else:
+    if not json_data.get("response", {}).get("data", []) == []:
         data = pd.DataFrame(json_data["response"]["data"])
         capacity_dict = format_capacity(data, target_datetime)
         return capacity_dict
@@ -93,8 +90,13 @@ def get_and_update_capacity_for_one_zone(
 ) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = fetch_capacity(zone_key, target_datetime)
-    if zone_key in ZONES_CONFIG:
-        update_zone(zone_key, zone_capacity)
+    if zone_capacity is not None:
+        if zone_key in ZONES_CONFIG:
+            update_zone(zone_key, zone_capacity)
+    else:
+        logger.warning(
+            f"Failed to fetch capacity data for {zone_key} at {target_datetime.strftime('%Y-%m')}"
+        )
 
 
 def get_and_update_capacity_for_all_zones(
