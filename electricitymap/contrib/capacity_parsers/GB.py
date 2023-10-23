@@ -47,9 +47,7 @@ def get_capacity_data(target_datetime: datetime) -> dict:
         )
 
 
-def fetch_production_capacity(
-    target_datetime: str, zone_key: ZoneKey = "GB"
-) -> None:
+def fetch_production_capacity(target_datetime: str, zone_key: ZoneKey = "GB") -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = get_capacity_data(target_datetime)
     update_zone(zone_key, zone_capacity)

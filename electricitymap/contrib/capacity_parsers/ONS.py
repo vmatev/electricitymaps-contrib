@@ -37,7 +37,9 @@ REGION_MAPPING = {
 }
 
 
-def get_capacity_for_all_zones(target_datetime: str, path:str=None, zone_key:ZoneKey="ONS") -> pd.DataFrame:
+def get_capacity_for_all_zones(
+    target_datetime: str, path: str = None, zone_key: ZoneKey = "ONS"
+) -> pd.DataFrame:
     df = pd.read_csv(CAPACITY_URL, sep=";")
     df = df[
         [
@@ -91,7 +93,9 @@ def get_capacity_for_one_zone(zone_key: str, target_datetime: str) -> pd.DataFra
     return get_capacity_for_all_zones(target_datetime)[zone_key]
 
 
-def fetch_production_capacity_for_all_zones(target_datetime: str, zone_key: ZoneKey = "ONS"):
+def fetch_production_capacity_for_all_zones(
+    target_datetime: str, zone_key: ZoneKey = "ONS"
+):
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     capacity = get_capacity_for_all_zones(target_datetime)
     for zone in capacity:
@@ -119,4 +123,3 @@ def filter_data_by_date(data: pd.DataFrame, target_datetime: datetime) -> pd.Dat
 
     df["datetime"] = target_datetime
     return df
-

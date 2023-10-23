@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 import pandas as pd
@@ -129,4 +128,3 @@ def fetch_production_capacity(
     zone_capacity = all_capacity[zone_key]
     update_zone(zone_key, zone_capacity)
     print(f"Updated capacity for {zone_key} in {target_datetime.year}")
-

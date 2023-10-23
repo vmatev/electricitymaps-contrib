@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 import pandas as pd
@@ -41,9 +40,7 @@ def get_capacity_data(target_datetime: datetime):
         )
 
 
-def fetch_production_capacity(
-    zone_key: ZoneKey, target_datetime: str
-) -> None:
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = get_capacity_data(target_datetime)
     update_zone(zone_key, zone_capacity)

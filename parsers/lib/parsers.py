@@ -27,13 +27,19 @@ PARSER_KEY_TO_DICT = {
     "productionCapacity": PRODUCTION_CAPACITY_PARSERS,
 }
 
-_parser_key_to_parser_folder = lambda parser_key: "capacity_parsers" if parser_key == "productionCapacity" else "parsers"
+_parser_key_to_parser_folder = (
+    lambda parser_key: "electricitymap.contrib.capacity_parsers"
+    if parser_key == "productionCapacity"
+    else "parsers"
+)
 
 # Read all zones
 for zone_id, zone_config in ZONES_CONFIG.items():
     for parser_key, v in zone_config.get("parsers", {}).items():
         mod_name, fun_name = v.split(".")
-        mod = importlib.import_module(f"{_parser_key_to_parser_folder(parser_key)}.%s" % mod_name)
+        mod = importlib.import_module(
+            f"{_parser_key_to_parser_folder(parser_key)}.%s" % mod_name
+        )
         PARSER_KEY_TO_DICT[parser_key][zone_id] = getattr(mod, fun_name)
 
 

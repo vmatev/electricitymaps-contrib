@@ -88,7 +88,7 @@ AGGREGATED_ZONE_MAPPING = {
     "US": ZONES_CONFIG["US"]["subZoneNames"],
 }
 
-IRENA_ZONES = ["IL", "IS", "LK","NI", "GF","PF"]
+IRENA_ZONES = ["IL", "IS", "LK", "NI", "GF", "PF"]
 IRENA_ZONES_MAPPING = {
     "Albania": "AL",
     "Argentina": "AR",
@@ -178,3 +178,14 @@ REE_ZONES = [
     for zone in ZONES_CONFIG
     if zone.startswith("ES") and "parsers" in ZONES_CONFIG[zone]
 ]
+
+
+# Get productionCapacity source to zones mapping
+CAPACITY_PARSER_SOURCE_TO_ZONES = {}
+for zone_id, zone_config in ZONES_CONFIG.items():
+    if zone_config.get("parsers", {}).get("productionCapacity") is not None:
+        source = zone_config.get("parsers", {}).get("productionCapacity").split(".")[0]
+        if source in CAPACITY_PARSER_SOURCE_TO_ZONES:
+            CAPACITY_PARSER_SOURCE_TO_ZONES[source].append(zone_id)
+        else:
+            CAPACITY_PARSER_SOURCE_TO_ZONES[source] = [zone_id]

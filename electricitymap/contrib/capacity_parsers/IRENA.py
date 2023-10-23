@@ -2,8 +2,8 @@ from datetime import datetime
 
 import pandas as pd
 
-from electricitymap.contrib.config import ZoneKey
 from electricitymap.contrib.capacity_parsers.constants import IRENA_ZONES_MAPPING
+from electricitymap.contrib.config import ZoneKey
 from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 IRENA_MODE_MAPPING = {
@@ -30,8 +30,7 @@ IRENA_MODE_MAPPING = {
 }
 
 
-SPECIFIC_MODE_MAPPING = {
-    "IS": { "Fossil fuels n.e.s.": "oil"}}
+SPECIFIC_MODE_MAPPING = {"IS": {"Fossil fuels n.e.s.": "oil"}}
 
 
 def map_variable_to_mode(row: pd.Series) -> pd.DataFrame:
@@ -45,6 +44,7 @@ def map_variable_to_mode(row: pd.Series) -> pd.DataFrame:
     else:
         row["mode"] = IRENA_MODE_MAPPING[variable]
     return row
+
 
 def get_capacity_data(path: str, target_datetime: datetime) -> dict:
     df = pd.read_excel(path, skipfooter=26)
@@ -111,5 +111,3 @@ def fetch_production_capacity(
     zone_capacity = all_capacity[zone_key]
     update_zone(zone_key, zone_capacity)
     print(f"Updated capacity for {zone_key} in {target_datetime.year}")
-
-

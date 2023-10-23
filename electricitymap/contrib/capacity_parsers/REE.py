@@ -78,9 +78,7 @@ def get_capacity_data(zone_key: ZoneKey, target_datetime: datetime):
         )
 
 
-def fetch_production_capacity(
-    zone_key: ZoneKey, target_datetime: str
-) -> None:
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = get_capacity_data(zone_key, target_datetime)
     update_zone(zone_key, zone_capacity)
@@ -88,7 +86,7 @@ def fetch_production_capacity(
 
 
 def fetch_production_capacity_for_all_zones(
-    target_datetime: str, zone_key: ZoneKey = "REE", path:str=None
+    target_datetime: str, zone_key: ZoneKey = "REE", path: str = None
 ) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in ZONE_KEY_TO_GEO_LIMIT:

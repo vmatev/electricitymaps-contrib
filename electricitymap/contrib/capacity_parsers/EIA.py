@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from logging import Logger, getLogger
 from typing import Dict, Union
@@ -80,9 +79,7 @@ def format_capacity(df: pd.DataFrame, target_datetime: datetime) -> dict:
     return capacity_dict
 
 
-def fetch_production_capacity(
-    zone_key: ZoneKey, target_datetime: str
-) -> None:
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = fetch_capacity(zone_key, target_datetime)
     if zone_capacity is not None:

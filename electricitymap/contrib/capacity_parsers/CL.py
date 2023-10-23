@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 import pandas as pd
@@ -9,15 +8,15 @@ from electricitymap.contrib.config import ZoneKey
 from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 MODE_MAPPING = {
-    "Hídrico":"hydro",
+    "Hídrico": "hydro",
     "Carbón": "unknown",
-    "Diésel":"unknown",
-    "Gas Natural":"unknown",
-    "Eólico":"wind",
-    "Solar":"solar",
-    "Termosolar":"solar",
-    "Geotérmico":"geothermal",
-    "Otros*":"unknown",
+    "Diésel": "unknown",
+    "Gas Natural": "unknown",
+    "Eólico": "wind",
+    "Solar": "solar",
+    "Termosolar": "solar",
+    "Geotérmico": "geothermal",
+    "Otros*": "unknown",
 }
 
 
@@ -37,7 +36,7 @@ def get_capacity_data(target_datetime: datetime):
     df = df.drop(columns=["Unnamed: 0", "TOTAL"])
     df = df.rename(columns={"Año": "datetime"})
     df = df.melt(id_vars=["datetime"], var_name="mode", value_name="value")
-    df["mode"] = df["mode"].apply(lambda x:MODE_MAPPING[x.strip()])
+    df["mode"] = df["mode"].apply(lambda x: MODE_MAPPING[x.strip()])
 
     df = df.groupby(["datetime", "mode"])[["value"]].sum().reset_index()
     if target_datetime.year in df["datetime"].unique():
@@ -46,15 +45,17 @@ def get_capacity_data(target_datetime: datetime):
         for idx, data in df.iterrows():
             mode_capacity = {}
             mode_capacity["datetime"] = target_datetime.strftime("%Y-%m-%d")
-            mode_capacity["value"] = round(data["value"],0)
+            mode_capacity["value"] = round(data["value"], 0)
             mode_capacity["source"] = "coordinador.cl"
             capacity[data["mode"]] = mode_capacity
         return capacity
     else:
-        raise ValueError(f"CL: No capacity data available for year {target_datetime.year}")
+        raise ValueError(
+            f"CL: No capacity data available for year {target_datetime.year}"
+        )
 
 
-def fetch_production_capacity(zone_key:ZoneKey, target_datetime: str) -> None:
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = get_capacity_data(target_datetime)
     update_zone(zone_key, zone_capacity)

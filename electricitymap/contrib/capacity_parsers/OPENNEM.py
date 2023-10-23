@@ -1,4 +1,3 @@
-
 from datetime import datetime, timezone
 
 import pandas as pd
@@ -109,7 +108,9 @@ def get_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: str):
     return get_capacity_for_all_zones(target_datetime)[zone_key]
 
 
-def fetch_production_capacity_for_all_zones(target_datetime: str, zone_key: ZoneKey = "OPENNEM" , path:str=None):
+def fetch_production_capacity_for_all_zones(
+    target_datetime: str, zone_key: ZoneKey = "OPENNEM", path: str = None
+):
     target_datetime = convert_datetime_str_to_isoformat(target_datetime).replace(
         tzinfo=timezone.utc
     )

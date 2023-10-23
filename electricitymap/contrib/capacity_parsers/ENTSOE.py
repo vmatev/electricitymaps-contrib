@@ -5,18 +5,14 @@ from typing import Dict, List
 from bs4 import BeautifulSoup
 from requests import Session
 
-from electricitymap.contrib.config import CONFIG_DIR, ZoneKey
-from electricitymap.contrib.config.reading import read_zones_config
 from electricitymap.contrib.capacity_parsers.constants import (
     AGGREGATED_ZONE_MAPPING,
-    ENTSOE_ZONES,
+    CAPACITY_PARSER_SOURCE_TO_ZONES,
 )
+from electricitymap.contrib.config import CONFIG_DIR, ZoneKey
+from electricitymap.contrib.config.reading import read_zones_config
 from parsers.ENTSOE import ENTSOE_DOMAIN_MAPPINGS, query_ENTSOE
-from scripts.utils import (
-    convert_datetime_str_to_isoformat,
-    update_zone,
-)
-from parsers.lib.parsers import CAPACITY_PARSER_SOURCE_TO_ZONES
+from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 """
 Update capacity configurations for ENTOS-E zones for a chosen year.
@@ -60,7 +56,9 @@ ENTSOE_PARAMETER_TO_MODE = {
     "B20": "unknown",
 }
 
-ENTSOE_ZONES= CAPACITY_PARSER_SOURCE_TO_ZONES["ENTSOE"]
+ENTSOE_ZONES = CAPACITY_PARSER_SOURCE_TO_ZONES["ENTSOE"]
+
+
 def query_capacity(
     in_domain: str, session: Session, target_datetime: datetime
 ) -> str | None:
@@ -137,9 +135,7 @@ def fetch_production_capacity_for_all_zones(
         print(f"Updated capacity for {zone} on {target_datetime.date()}")
 
 
-def fetch_production_capacity(
-    zone_key: ZoneKey, target_datetime: str
-) -> None:
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = get_capacity_for_one_zone(zone_key, target_datetime)
     update_zone(zone_key, zone_capacity)
@@ -199,4 +195,3 @@ def update_aggregated_capacities(zone_key: ZoneKey, target_datetime: datetime) -
     aggregated_zone_capacity = update_aggregated_zone_capacities(zone_capacity_list)
 
     update_zone(zone_key, aggregated_zone_capacity)
-
