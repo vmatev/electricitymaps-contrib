@@ -132,4 +132,5 @@ fallbackZoneMixes:
 parsers:
   consumption: MY_WM.fetch_consumption
   production: MY_WM.fetch_production
+  productionCapacity: MY_WM.fetch_production_capacity
 timezone: null

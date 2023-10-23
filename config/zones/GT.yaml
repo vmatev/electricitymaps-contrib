@@ -180,4 +180,5 @@ fallbackZoneMixes:
 parsers:
   consumption: GT.fetch_consumption
   production: GT.fetch_production
+  productionCapacity: EMBER.fetch_production_capacity
 timezone: America/Guatemala

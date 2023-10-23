@@ -74,4 +74,5 @@ fallbackZoneMixes:
 parsers:
   consumption: IQ.fetch_consumption
   production: IQ.fetch_production
+  productionCapacity: EMBER.fetch_production_capacity
 timezone: Asia/Baghdad

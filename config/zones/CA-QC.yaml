@@ -220,4 +220,5 @@ fallbackZoneMixes:
 parsers:
   consumption: CA_QC.fetch_consumption
   production: CA_QC.fetch_production
+  productionCapacity: CA_QC.fetch_production_capacity
 timezone: America/Toronto
