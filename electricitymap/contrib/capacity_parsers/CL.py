@@ -1,4 +1,4 @@
-import argparse
+
 from datetime import datetime
 
 import pandas as pd
@@ -6,12 +6,7 @@ from bs4 import BeautifulSoup
 from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
-from scripts.utils import (
-    ROOT_PATH,
-    convert_datetime_str_to_isoformat,
-    run_shell_command,
-    update_zone,
-)
+from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 MODE_MAPPING = {
     "Hídrico":"hydro",
@@ -64,26 +59,3 @@ def fetch_production_capacity(zone_key:ZoneKey, target_datetime: str) -> None:
     zone_capacity = get_capacity_data(target_datetime)
     update_zone(zone_key, zone_capacity)
     print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--target_datetime", help="The target_datetime to get capacity for"
-    )
-    parser.add_argument("--zone", help="The zone to get capacity for", default=None)
-    args = parser.parse_args()
-    target_datetime = args.target_datetime
-    zone = args.zone
-
-    if zone is None:
-        zone ="CL-SEN"
-
-    print(f"Getting capacity for {zone} at {target_datetime}")
-    fetch_production_capacity(zone, target_datetime)
-
-    print(f"Running prettier...")
-    run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
-
-
-if __name__ == "__main__":
-    main()

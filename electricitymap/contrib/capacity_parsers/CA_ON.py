@@ -1,8 +1,7 @@
-import argparse
+
 from datetime import datetime
 
 import pandas as pd
-from bs4 import BeautifulSoup
 from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
@@ -42,7 +41,7 @@ def get_capacity_data(target_datetime: datetime):
         )
 
 
-def get_and_update_capacity_for_one_zone(
+def fetch_production_capacity(
     zone_key: ZoneKey, target_datetime: str
 ) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)

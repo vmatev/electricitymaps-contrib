@@ -88,7 +88,7 @@ def fetch_production_capacity(
 
 
 def fetch_production_capacity_for_all_zones(
-    target_datetime: str, zone_key: ZoneKey = "REE"
+    target_datetime: str, zone_key: ZoneKey = "REE", path:str=None
 ) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in ZONE_KEY_TO_GEO_LIMIT:

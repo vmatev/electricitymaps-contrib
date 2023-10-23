@@ -47,14 +47,10 @@ def get_capacity_data(target_datetime: datetime) -> dict:
         )
 
 
-def get_and_update_capacity_for_one_zone(
+def fetch_production_capacity(
     target_datetime: str, zone_key: ZoneKey = "GB"
 ) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = get_capacity_data(target_datetime)
     update_zone(zone_key, zone_capacity)
     print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
-
-
-if __name__ == "__main__":
-    get_capacity_data(datetime(2023, 1, 1))

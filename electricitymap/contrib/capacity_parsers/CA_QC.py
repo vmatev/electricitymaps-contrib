@@ -83,6 +83,3 @@ def fetch_production_capacity(
     update_zone(zone_key, zone_capacity)
     print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
 
-
-if __name__ == "__main__":
-    print(get_capacity_data())

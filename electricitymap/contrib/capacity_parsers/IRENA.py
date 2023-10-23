@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 
 from electricitymap.contrib.config import ZoneKey
-from scripts.capacity_parsers.constants import IRENA_ZONES_MAPPING
+from electricitymap.contrib.capacity_parsers.constants import IRENA_ZONES_MAPPING
 from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 IRENA_MODE_MAPPING = {
@@ -113,11 +113,3 @@ def fetch_production_capacity(
     print(f"Updated capacity for {zone_key} in {target_datetime.year}")
 
 
-if __name__ == "__main__":
-    print(
-        fetch_production_capacity(
-            "/Users/mathildedaugy/Repos/csvs/ELECCAP_20231005-122235.xlsx",
-            "2022-01-01",
-            "PF",
-        )
-    )

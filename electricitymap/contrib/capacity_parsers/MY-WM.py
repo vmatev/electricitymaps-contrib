@@ -59,30 +59,9 @@ def get_capacity_data(target_datetime: datetime) -> dict:
     else:
         raise ValueError(f"Failed to fetch capacity data for GSO at {target_datetime.strftime('%Y-%m')}")
 
-def get_and_update_capacity_for_one_zone(zone_key:ZoneKey, target_datetime: str) -> None:
+def fetch_production_capacity(zone_key:ZoneKey, target_datetime: str) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     zone_capacity = get_capacity_data(target_datetime)
     update_zone(zone_key, zone_capacity)
     print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--target_datetime", help="The target_datetime to get capacity for"
-    )
-    parser.add_argument("--zone", help="The zone to get capacity for", default=None)
-    args = parser.parse_args()
-    target_datetime = args.target_datetime
-    zone = args.zone
-
-    if zone is None:
-        zone = "MY-WM"
-
-    print(f"Getting capacity for {zone} at {target_datetime}")
-    get_and_update_capacity_for_one_zone(zone, target_datetime)
-
-    print(f"Running prettier...")
-    run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
-
-if __name__ == "__main__":
-    main()

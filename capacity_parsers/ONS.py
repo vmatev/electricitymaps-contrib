@@ -1,13 +1,13 @@
-import argparse
-from datetime import datetime, timezone
+
+from datetime import datetime
 
 import pandas as pd
 
 from electricitymap.contrib.config import ZoneKey
 from scripts.utils import (
-    ROOT_PATH,
+
     convert_datetime_str_to_isoformat,
-    run_shell_command,
+
     update_zone,
 )
 
@@ -120,27 +120,3 @@ def filter_data_by_date(data: pd.DataFrame, target_datetime: datetime) -> pd.Dat
     df["datetime"] = target_datetime
     return df
 
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--target_datetime", help="The target_datetime to get capacity for"
-    )
-    parser.add_argument("--zone", help="The zone to get capacity for", default=None)
-    args = parser.parse_args()
-    target_datetime = args.target_datetime
-    zone = args.zone
-
-    if zone is None:
-        print(f"Getting capacity for all BR zones at {target_datetime}")
-        fetch_production_capacity_for_all_zones(target_datetime)
-    else:
-        print(f"Getting capacity for {zone} at {target_datetime}")
-        fetch_production_capacity(zone, target_datetime)
-
-    print(f"Running prettier...")
-    run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
-
-
-if __name__ == "__main__":
-    main()

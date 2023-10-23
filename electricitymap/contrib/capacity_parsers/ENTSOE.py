@@ -7,14 +7,16 @@ from requests import Session
 
 from electricitymap.contrib.config import CONFIG_DIR, ZoneKey
 from electricitymap.contrib.config.reading import read_zones_config
+from electricitymap.contrib.capacity_parsers.constants import (
+    AGGREGATED_ZONE_MAPPING,
+    ENTSOE_ZONES,
+)
 from parsers.ENTSOE import ENTSOE_DOMAIN_MAPPINGS, query_ENTSOE
-from scripts.capacity_parsers.constants import AGGREGATED_ZONE_MAPPING, ENTSOE_ZONES
 from scripts.utils import (
-    ROOT_PATH,
     convert_datetime_str_to_isoformat,
-    run_shell_command,
     update_zone,
 )
+from parsers.lib.parsers import CAPACITY_PARSER_SOURCE_TO_ZONES
 
 """
 Update capacity configurations for ENTOS-E zones for a chosen year.
@@ -58,7 +60,7 @@ ENTSOE_PARAMETER_TO_MODE = {
     "B20": "unknown",
 }
 
-
+ENTSOE_ZONES= CAPACITY_PARSER_SOURCE_TO_ZONES["ENTSOE"]
 def query_capacity(
     in_domain: str, session: Session, target_datetime: datetime
 ) -> str | None:
@@ -125,8 +127,8 @@ def fetch_all_capacity(target_datetime: datetime) -> dict:
     return capacity_dict
 
 
-def get_and_update_capacity_for_all_zones(
-    target_datetime: str, zone_key: ZoneKey = "ENTSOE"
+def fetch_production_capacity_for_all_zones(
+    target_datetime: str, zone_key: ZoneKey = "ENTSOE", path: str = None
 ) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     for zone in ENTSOE_ZONES:
@@ -135,7 +137,7 @@ def get_and_update_capacity_for_all_zones(
         print(f"Updated capacity for {zone} on {target_datetime.date()}")
 
 
-def get_and_update_capacity_for_one_zone(
+def fetch_production_capacity(
     zone_key: ZoneKey, target_datetime: str
 ) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
@@ -198,42 +200,3 @@ def update_aggregated_capacities(zone_key: ZoneKey, target_datetime: datetime) -
 
     update_zone(zone_key, aggregated_zone_capacity)
 
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--target_datetime", help="The target_datetime to get capacity for"
-    )
-    parser.add_argument("--zone", help="The zone to get capacity for", default=None)
-    args = parser.parse_args()
-    target_datetime = args.target_datetime
-    zone = args.zone
-
-    if zone is None:
-        print(f"Getting capacity for all ENTSOE zones at {target_datetime}")
-        get_and_update_capacity_for_all_zones(target_datetime)
-        for zone in AGGREGATED_ZONE_MAPPING:
-            update_aggregated_capacities(zone, target_datetime)
-            print(
-                f"Updated aggregated zone {zone} with capacity for {target_datetime} in config/zones."
-            )
-    else:
-        get_and_update_capacity_for_one_zone(zone, target_datetime)
-        print(
-            f"Updated {zone}.yaml with capacity for {target_datetime} in config/zones."
-        )
-        if any(zone in i for i in list(AGGREGATED_ZONE_MAPPING.values())):
-            parent_zone = [
-                item[0] for item in AGGREGATED_ZONE_MAPPING.items() if zone in item[1]
-            ]
-
-            update_aggregated_capacities(parent_zone[0], "2022-01-01")
-            print(
-                f"Updated {parent_zone[0]}.yaml with capacity for {target_datetime} in config/zones."
-            )
-    print(f"Running prettier...")
-    run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
-
-
-if __name__ == "__main__":
-    main()

@@ -113,14 +113,14 @@ def get_capacity_dict_from_df(df_capacity: pd.DataFrame) -> dict:
         all_capacity[zone] = zone_capacity
     return all_capacity
 
-def get_and_update_capacity_for_all_zones(path:str, target_datetime:str, zone_key:ZoneKey="EMBER")-> None:
+def fetch_production_capacity_for_all_zones(path:str, target_datetime:str, zone_key:ZoneKey="EMBER")-> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_data_from_csv(path, target_datetime.year)
     for zone in all_capacity:
         update_zone(zone, all_capacity[zone])
         print(f"Updated capacity for {zone} in {target_datetime.year}")
 
-def get_and_update_capacity_for_one_zone(path:str, target_datetime:str, zone_key:ZoneKey) -> None:
+def fetch_production_capacity(path:str, target_datetime:str, zone_key:ZoneKey) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_data_from_csv(path, target_datetime.year)
     zone_capacity = all_capacity[zone_key]
@@ -141,10 +141,10 @@ def main():
 
     if zone is None:
         print(f"Getting capacity for all zones at {target_datetime}")
-        get_and_update_capacity_for_all_zones(path, target_datetime)
+        fetch_production_capacity_for_all_zones(path, target_datetime)
     else:
         print(f"Getting capacity for {zone} at {target_datetime}")
-        get_and_update_capacity_for_one_zone(path, target_datetime, zone)
+        fetch_production_capacity(path, target_datetime, zone)
 
     print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)

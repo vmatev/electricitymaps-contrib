@@ -1,4 +1,4 @@
-import argparse
+
 from datetime import datetime, timezone
 
 import pandas as pd
@@ -6,12 +6,7 @@ from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
 from parsers.OPENNEM import SOURCE, ZONE_KEY_TO_REGION
-from scripts.utils import (
-    ROOT_PATH,
-    convert_datetime_str_to_isoformat,
-    run_shell_command,
-    update_zone,
-)
+from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 """Disclaimer: only works for real-time data. There is retired capacity included but we do not have the information on when the capacity was retired."""
 
@@ -114,7 +109,7 @@ def get_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: str):
     return get_capacity_for_all_zones(target_datetime)[zone_key]
 
 
-def fetch_production_capacity_for_all_zones(target_datetime: str, zone_key: ZoneKey = "OPENNEM"):
+def fetch_production_capacity_for_all_zones(target_datetime: str, zone_key: ZoneKey = "OPENNEM" , path:str=None):
     target_datetime = convert_datetime_str_to_isoformat(target_datetime).replace(
         tzinfo=timezone.utc
     )
@@ -127,7 +122,7 @@ def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str):
     target_datetime = convert_datetime_str_to_isoformat(target_datetime).replace(
         tzinfo=timezone.utc
     )
-    capacity = get_capacity_for_one_zone(zone_key, target_datetime)
+    capacity = get_capacity_for_all_zones(target_datetime)[zone_key]
     update_zone(zone_key, capacity)
 
 
@@ -155,27 +150,3 @@ def get_solar_capacity_au_nt(target_datetime: str):
             "source": SOURCE,
         }
     return capacity
-
-
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--target_datetime", help="The target_datetime to get capacity for"
-    )
-    parser.add_argument("--zone", help="The zone to get capacity for", default=None)
-    args = parser.parse_args()
-    target_datetime = args.target_datetime
-    zone = args.zone
-
-    if zone is None:
-        print(f"Getting capacity for all AU zones at {target_datetime}")
-        fetch_production_capacity_for_all_zones(target_datetime)
-    else:
-        print(f"Getting capacity for {zone} at {target_datetime}")
-        fetch_production_capacity(zone, target_datetime)
-    run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
-
-
-if __name__ == "__main__":
-    # main()
-    print(get_solar_capacity_au_nt("2023-01-01"))

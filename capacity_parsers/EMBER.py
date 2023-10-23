@@ -1,4 +1,4 @@
-
+import argparse
 from datetime import datetime
 
 import pandas as pd
@@ -6,7 +6,12 @@ import pycountry
 
 from electricitymap.contrib.capacity_parsers.constants import EMBER_ZONES
 from electricitymap.contrib.config import ZoneKey
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
+from scripts.utils import (
+    ROOT_PATH,
+    convert_datetime_str_to_isoformat,
+    run_shell_command,
+    update_zone,
+)
 
 EMBER_VARIABLE_TO_MODE = {
     "Bioenergy": "biomass",
@@ -14,25 +19,24 @@ EMBER_VARIABLE_TO_MODE = {
     "Gas": "gas",
     "Hydro": "hydro",
     "Nuclear": "nuclear",
-    "Other Fossil": "unknown",  # mostly oil it seems
+    "Other Fossil": "unknown", # mostly oil it seems
     "Other Renewables": "unknown",
     "Solar": "solar",
     "Wind": "wind",
 }
 
 SPECIFIC_MODE_MAPPING = {
-    "BD": {"Other Fossil": "oil"},
-    "CO": {"Other Fossil": "oil"},
-    "CY": {"Other Fossil": "oil"},
-    "KR": {"Other Fossil": "oil"},
-    "KW": {"Other Fossil": "oil"},
-    "MN": {"Other Fossil": "coal"},
-    "SG": {"Other Fossil": "coal"},
-    "SV": {"Other Fossil": "oil"},
-    "TR": {"Other Fossil": "oil", "Other Renewables": "geothermal"},
-    "TW": {"Other Fossil": "oil"},
-    "ZA": {"Other Fossil": "oil"},
-}
+    "BD": { "Other Fossil": "oil"},
+    "CO": { "Other Fossil": "oil"},
+    "CY": { "Other Fossil": "oil"},
+    "KR": { "Other Fossil": "oil"},
+    "KW": { "Other Fossil": "oil"},
+    "MN": { "Other Fossil": "coal"},
+    "SG": { "Other Fossil": "coal"},
+    "SV": { "Other Fossil": "oil"},
+    "TR": {"Other Fossil": "oil","Other Renewables": "geothermal"},
+    "TW": { "Other Fossil": "oil"},
+    "ZA": { "Other Fossil": "oil"},}
 
 
 def map_variable_to_mode(row: pd.Series) -> pd.DataFrame:
@@ -47,8 +51,7 @@ def map_variable_to_mode(row: pd.Series) -> pd.DataFrame:
         row["mode"] = EMBER_VARIABLE_TO_MODE[variable]
     return row
 
-
-def get_data_from_csv(path: str, year: int) -> pd.DataFrame:
+def get_data_from_csv(path: str, year:int) -> pd.DataFrame:
     df = pd.read_csv(path)
 
     df_capacity = format_ember_data(df, year)
@@ -104,29 +107,49 @@ def get_capacity_dict_from_df(df_capacity: pd.DataFrame) -> dict:
         for i, data in df_zone.iterrows():
             mode_capacity = {}
             mode_capacity["datetime"] = data["datetime"].strftime("%Y-%m-%d")
-            mode_capacity["value"] = round(float(data["value"]), 0)
+            mode_capacity["value"] = round(float(data["value"]),0)
             mode_capacity["source"] = "Ember, Yearly electricity data"
             zone_capacity[data["mode"]] = mode_capacity
         all_capacity[zone] = zone_capacity
     return all_capacity
 
-
-def fetch_production_capacity_for_all_zones(
-    target_datetime: str, path: str, zone_key: ZoneKey = "EMBER"
-) -> None:
+def fetch_production_capacity_for_all_zones(path:str, target_datetime:str, zone_key:ZoneKey="EMBER")-> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_data_from_csv(path, target_datetime.year)
     for zone in all_capacity:
         update_zone(zone, all_capacity[zone])
         print(f"Updated capacity for {zone} in {target_datetime.year}")
 
-
-def fetch_production_capacity(
-    target_datetime: str, path: str, zone_key: ZoneKey
-) -> None:
+def fetch_production_capacity(path:str, target_datetime:str, zone_key:ZoneKey) -> None:
     target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_data_from_csv(path, target_datetime.year)
     zone_capacity = all_capacity[zone_key]
     update_zone(zone_key, zone_capacity)
     print(f"Updated capacity for {zone_key} in {target_datetime.year}")
 
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--path", help="The path to the csv file")
+    parser.add_argument("--zone", help="The zone to get capacity for", default=None)
+    parser.add_argument(
+        "--target_datetime", help="The target_datetime to get capacity for"
+    )
+    args = parser.parse_args()
+    path = args.path
+    zone = args.zone
+    target_datetime = args.target_datetime
+
+    if zone is None:
+        print(f"Getting capacity for all zones at {target_datetime}")
+        fetch_production_capacity_for_all_zones(path, target_datetime)
+    else:
+        print(f"Getting capacity for {zone} at {target_datetime}")
+        fetch_production_capacity(path, target_datetime, zone)
+
+    print(f"Running prettier...")
+    run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
+
+
+
+if __name__ == "__main__":
+    main()
