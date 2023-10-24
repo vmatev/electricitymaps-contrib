@@ -1,3 +1,4 @@
+import calendar
 from datetime import datetime
 from logging import getLogger
 from typing import Dict, Union
@@ -67,9 +68,10 @@ def fetch_production_capacity(
     target_datetime: datetime,
 ) -> Union[Dict, None]:
     url_prefix = CAPACITY_URL.format(REGIONS[zone_key])
-    url = f'{url_prefix}&api_key={API_KEY}&start={target_datetime.strftime("%Y-%m")}-01&end={target_datetime.strftime("%Y-%m")}-12&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=5000'
+    url = f'{url_prefix}&api_key={API_KEY}&start={target_datetime.strftime("%Y-%m-01")}&end={target_datetime.replace(day = calendar.monthrange(target_datetime.year, target_datetime.month)[1]).strftime("%Y-%m-%d")}&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=5000'
     r: Response = Session().get(url)
     json_data = r.json()
+    breakpoint()
     if not json_data.get("response", {}).get("data", []) == []:
         data = pd.DataFrame(json_data["response"]["data"])
         capacity_dict = format_capacity(data, target_datetime)
