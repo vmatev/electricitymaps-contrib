@@ -19,9 +19,8 @@ Over the years, we have noticed that sometimes, real-time data published by the 
 
 One way to perform outlier detection is to check that each incoming data point is not higher than the installed capacity for a given mode. The power output cannot be above the energy input as the efficiency of power plants is always below 100%. In other words, for a given zone and a given mode, the power production for that mode at any given time cannot exceed the installed capacity for that mode.
 
-**Example**
-
-In 2023, the wind capacity in **DK-DK1** was 5233 MW. The average wind production in the first 3 quarters of 2023 was 1455 MW.
+>**Example**
+>In 2023, the wind capacity in **DK-DK1** was 5233 MW. The average wind production in the first 3 quarters of 2023 was 1455 MW.
 
 The goal here is to validate each incoming production parser event by comparing each mode production against the installed capacity available in the zone configuration. If a mode production is higher than the installed capacity, the data point will be flagged as an outlier and will be corrected by our data pipelines.
 
@@ -101,7 +100,7 @@ The `capacity_parser` function has the following arguments:
     </tr>
     <tr>
       <td>--target_datetime</td>
-      <td> Date for the capacity dat (e.g. "2023-01-01") </td>
+      <td> Date for the capacity data (e.g. "2023-01-01") </td>
     </tr>
     <tr>
       <td>--path</td>
@@ -305,88 +304,6 @@ The following other zones can also be updated automatically:
 
 ### The zone capacity is updated manually <a name="manual_update"></a>
 For the following zones, a capacity parser is not available. You will find the instructions to extract the latest capacity information below. Once the data is collected, the capacity configuration should be updated using the above mentioned format.
-&nbsp;<details><summary>CA-SK</summary>
-**Main link**: https://www.saskpower.com/Our-Power-Future/Our-Electricity/Electrical-System/System-Map
-
-Capacity data is available in a html table and can be parsed. A parser was not built as we only collect daily data for this parser.
-&nbsp;</details>
-&nbsp;<details><summary>CH</summary>
-Main link: https://www.uvek-gis.admin.ch/BFE/storymaps/EE_Elektrizitaetsproduktionsanlagen/
-
-Capacity is available in a table on the webpage.
-&nbsp;</details>
-&nbsp;<details><summary>SE</summary>
-**Main link**: https://www.svk.se/om-oss/rapporter-och-remissvar/
-
-**Report name**: Kraftbalansen på den svenska elmarknaden, rapport YYYY
-
-The report is published annually and in pdf format.It should be updated at the end of May of the following year.
-
-**Table name**: Tabell 3. Installerad effekt [MW] per kraftslag
-&nbsp;</details>
-&nbsp;<details><summary>PH</summary>
-**Main link**: https://doe.gov.ph/electric-power
->*Disclaimer*: the website is geo-blocked and can only be accessed by using a VPN.
-
-**Report name**: YYYY List of Existing Power Plants in Grid areas for Luzon, Visayas and Mindanao
-
-The report is published every six months and is available in pdf format. The report includes capacity data for all sub-zones for production and battery storage.
-&nbsp;</details>
-&nbsp;<details><summary>IN</summary>
-
-Capacity is collected from two main sources. Both sources are pdf and revised at least twice a year.
-
-For renewable sources, data is published by the Ministry of New and Renewable Energy
-
-- **Main link**: https://mnre.gov.in/en/physical-progress/
-- **Report name**: State-wise RE installed capacity
-
-The data is available at the state level and should be aggregated as follows:
-- Northern grid: Delhi, Haryana, Himachal Pradesh, Jammu and Kashmir, Ladakh, Punjab, Rajasthan, Uttar Pradesh, Uttarakhand
-- Western grid: Maharashtra, Gujarat, Madhya Pradesh, Chhattisgarh, Goa, Dadra and Nagar Haveli
-- Southern grid: Tamil Nadu, Karnataka, Kerala, Andhra Pradesh, Telangana, Pondicherry
-- Eastern grid: Bihar, Jharkhand, Odisha, West Bengal, Sikkim
-- North-Eastern grid: Arunachal Pradesh, Assam, Manipur, Meghalaya, Mizoram, Nagaland, Tripura
-
-> **Note**:
->This report only includes small hydro. Conventional hydro is published on the National Power Portal. Total hydro capacity is the sum of both.
-
-For conventional power generation, data is published by the National Power Portal.
-
- - **Main link**: https://npp.gov.in/publishedReports
- - **Report name**: All India Installed Capacity of Power Stations (available in pdf and xls)
-
-&nbsp;</details>
-&nbsp;<details><summary>FO</summary>
-**Main link**: https://www.sev.fo/english/the-power-supply-system
-
-Consider Thermal to be oil generation.
-&nbsp;</details>
-&nbsp;<details><summary>DK-BHM</summary>
-
-**Main link**: https://reempowered-h2020.com/pilots/bornholm/
-
-**Note**: This source may not be updated in the future. Fossil capacity should not change or be mothballed but wind and solar capacity are likely to increase.
-&nbsp;</details>
-&nbsp;<details><summary>FR-CO</summary>
-
-**Main link**: https://corse.edf.fr/edf-en-corse/nos-installations-en-corse/nos-moyens-de-production-electrique-en-corse
-
-See data in the section *“La carte au format texte”*
-
->**Note**: This source may not be updated in the future. Fossil capacity should not change or be mothballed but wind and solar capacity are likely to increase.
-&nbsp;</details>
-&nbsp;<details><summary>RU</summary>
-
-**Main link**: https://minenergo.gov.ru/node/532
-
->*Disclaimer*: the website is geo-blocked and can only be accessed by using a VPN
-
-**Table name**: Table 3 Structure of installed capacity of power plants [...]
-
-> **Note**:
-> Data has not been updated since 01-01-2020, it would be good to see if an other source exists.
-&nbsp;</details>
 &nbsp;<details><summary>AU-NT</summary>
 
 Capacity data is available from two different sources.
@@ -398,20 +315,34 @@ For conventional power generation:
 Solar capacity is available on **OPENNEM**, this data can be collected using the OPENNEM parser by doing the following:
 - Run `poetry run capacity_parser --zone AU-NT --target_datetime 2023-01-01` and update other capacity manually using the same format
 &nbsp;</details>
-&nbsp;<details><summary>KR</summary>
-> **Note**: Ember does not publish hydro storage capacity. The rest of the data is collected from EMBER. The value for pumped storage should be extracted and added manually to the capacity configuration.
+&nbsp;<details><summary>CA-SK</summary>
+**Main link**: https://www.saskpower.com/Our-Power-Future/Our-Electricity/Electrical-System/System-Map
 
-**Main link**:https://www.khnp.co.kr/eng/contents.do?key=414
-
-**Table name**: Pumped-Storage Power Plants
-
+Capacity data is available in a html table and can be parsed. A parser was not built as we only collect daily data for this parser.
 &nbsp;</details>
-&nbsp;<details><summary>TW</summary>
-> **Note**: Ember does not publish hydro storage capacity. The rest of the data is collected from EMBER. The value for pumped storage should be extracted and added manually to the capacity configuration.
+&nbsp;<details><summary>CH</summary>
+Main link: https://www.uvek-gis.admin.ch/BFE/storymaps/EE_Elektrizitaetsproduktionsanlagen/
 
-**Main link**: https://www.taipower.com.tw/en/news_noclassify_info.aspx?id=4190&chk=a6afa390-3b52-42eb-bc94-db2afc6cdb6c&mid=4440&param=pn%3d1%26mid%3d4440%26key%3d
+Capacity is available in a table on the webpage.
+&nbsp;</details>
+&nbsp;<details><summary>DK-BHM</summary>
 
-**Mode name**: P.S. hydro
+**Main link**: https://reempowered-h2020.com/pilots/bornholm/
+
+**Note**: This source may not be updated in the future. Fossil capacity should not change or be mothballed but wind and solar capacity are likely to increase.
+&nbsp;</details>
+&nbsp;<details><summary>FO</summary>
+**Main link**: https://www.sev.fo/english/the-power-supply-system
+
+Consider Thermal to be oil generation.
+&nbsp;</details>
+&nbsp;<details><summary>FR-CO</summary>
+
+**Main link**: https://corse.edf.fr/edf-en-corse/nos-installations-en-corse/nos-moyens-de-production-electrique-en-corse
+
+See data in the section *“La carte au format texte”*
+
+>**Note**: This source may not be updated in the future. Fossil capacity should not change or be mothballed but wind and solar capacity are likely to increase.
 &nbsp;</details>
 &nbsp;<details><summary>GT</summary>
 
@@ -483,7 +414,6 @@ Solar capacity is available on **OPENNEM**, this data can be collected using the
 </table>
 
 > **Note** GDR corresponds to the distributed generation capacity
-
 &nbsp;</details>
 &nbsp;<details><summary>HN</summary>
 
@@ -533,13 +463,80 @@ Solar capacity is available on **OPENNEM**, this data can be collected using the
   </tbody>
 </table>
 &nbsp;</details>
+&nbsp;<details><summary>IN</summary>
+
+Capacity is collected from two main sources. Both sources are pdf and revised at least twice a year.
+
+For renewable sources, data is published by the Ministry of New and Renewable Energy
+
+- **Main link**: https://mnre.gov.in/en/physical-progress/
+- **Report name**: State-wise RE installed capacity
+
+The data is available at the state level and should be aggregated as follows:
+- Northern grid: Delhi, Haryana, Himachal Pradesh, Jammu and Kashmir, Ladakh, Punjab, Rajasthan, Uttar Pradesh, Uttarakhand
+- Western grid: Maharashtra, Gujarat, Madhya Pradesh, Chhattisgarh, Goa, Dadra and Nagar Haveli
+- Southern grid: Tamil Nadu, Karnataka, Kerala, Andhra Pradesh, Telangana, Pondicherry
+- Eastern grid: Bihar, Jharkhand, Odisha, West Bengal, Sikkim
+- North-Eastern grid: Arunachal Pradesh, Assam, Manipur, Meghalaya, Mizoram, Nagaland, Tripura
+
+> **Note**:
+>This report only includes small hydro. Conventional hydro is published on the National Power Portal. Total hydro capacity is the sum of both.
+
+For conventional power generation, data is published by the National Power Portal.
+
+ - **Main link**: https://npp.gov.in/publishedReports
+ - **Report name**: All India Installed Capacity of Power Stations (available in pdf and xls)
+&nbsp;</details>
+&nbsp;<details><summary>KR</summary>
+> **Note**: Ember does not publish hydro storage capacity. The rest of the data is collected from EMBER. The value for pumped storage should be extracted and added manually to the capacity configuration.
+
+**Main link**:https://www.khnp.co.kr/eng/contents.do?key=414
+
+**Table name**: Pumped-Storage Power Plants
+&nbsp;</details>
+&nbsp;<details><summary>PH</summary>
+**Main link**: https://doe.gov.ph/electric-power
+>*Disclaimer*: the website is geo-blocked and can only be accessed by using a VPN.
+
+**Report name**: YYYY List of Existing Power Plants in Grid areas for Luzon, Visayas and Mindanao
+
+The report is published every six months and is available in pdf format. The report includes capacity data for all sub-zones for production and battery storage.
+&nbsp;</details>
+&nbsp;<details><summary>RU</summary>
+
+**Main link**: https://minenergo.gov.ru/node/532
+
+>*Disclaimer*: the website is geo-blocked and can only be accessed by using a VPN
+
+**Table name**: Table 3 Structure of installed capacity of power plants [...]
+
+> **Note**:
+> Data has not been updated since 01-01-2020, it would be good to see if an other source exists.
+&nbsp;</details>
+&nbsp;<details><summary>SE</summary>
+**Main link**: https://www.svk.se/om-oss/rapporter-och-remissvar/
+
+**Report name**: Kraftbalansen på den svenska elmarknaden, rapport YYYY
+
+The report is published annually and in pdf format.It should be updated at the end of May of the following year.
+
+**Table name**: Tabell 3. Installerad effekt [MW] per kraftslag
+&nbsp;</details>
+&nbsp;<details><summary>TW</summary>
+> **Note**: Ember does not publish hydro storage capacity. The rest of the data is collected from EMBER. The value for pumped storage should be extracted and added manually to the capacity configuration.
+
+**Main link**: https://www.taipower.com.tw/en/news_noclassify_info.aspx?id=4190&chk=a6afa390-3b52-42eb-bc94-db2afc6cdb6c&mid=4440&param=pn%3d1%26mid%3d4440%26key%3d
+
+**Mode name**: P.S. hydro
+&nbsp;</details>
+
 
 ## Technical requirements for adding a new data source <a name="technical_requirements"></a>
 
 If a new data source becomes available for a zone that does **not** have a capacity parser:
 
 - **Verify the data source.** Please refer to our wiki page [Verify data sources](https://github.com/electricitymaps/electricitymaps-contrib/wiki/Verify-data-sources). The data should come from an authoritative data source, the criteria are listed on the wiki page.
-- **Update this document with the new data source**. For maintainability and transparency reasons, the data should be easily accessible. This will enable another contributor to update the capacity breakdown in the future.
+- **Update this document with the new data source**. For maintainability and transparency reasons, the data should be easily accessible. This will enable another contributor to update the capacity breakdown in the future. You can create a new subsection in [The zone capacity is updated manually](#manual_update)
 - **Add the guidelines to collect the data**. This should also be done for maintainability and transparency reasons.
 
 If the capacity for the zone in question is collected using a capacity parser:
@@ -548,3 +545,4 @@ If the capacity for the zone in question is collected using a capacity parser:
 - **Compare the new data with the existing data.** As explained above, we want to limit the number of data sources used and wish to use sources for which a certain level of quality is implied.
 - **Discuss with the Electricity Maps team.** If the new data source is indeed of higher quality and meets all the requirements, feel free to ask the Electricity Maps team. We will find the best way forward otgether :)
 
+You can create an issue on [contrib](https://github.com/electricitymaps/electricitymaps-contrib/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) if you find a new data source or if an existing link is broken.
