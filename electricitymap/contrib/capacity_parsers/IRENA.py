@@ -2,9 +2,85 @@ from datetime import datetime
 
 import pandas as pd
 
-from electricitymap.contrib.capacity_parsers.constants import IRENA_ZONES_MAPPING
 from electricitymap.contrib.config import ZoneKey
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
+
+IRENA_ZONES_MAPPING = {
+    "Albania": "AL",
+    "Argentina": "AR",
+    "Aruba": "AW",
+    "Austria": "AT",
+    "Bangladesh": "BD",
+    "Belgium": "BE",
+    "Bolivia (Plurinational State of)": "BO",
+    "Bosnia and Herzegovina": "BA",
+    "Bulgaria": "BG",
+    "Chile": "CL-SEN",
+    "China, Hong Kong Special Administrative Region": "HK",
+    "Chinese Taipei": "TW",
+    "Colombia": "CO",
+    "Costa Rica": "CR",
+    "Croatia": "HR",
+    "Cyprus": "CY",
+    "Czechia": "CZ",
+    "Estonia": "EE",
+    "Faroe Islands": "FO",
+    "Finland": "FI",
+    "France": "FR",
+    "French Guiana": "GF",
+    "French Polynesia": "PF",
+    "Georgia": "GE",
+    "Germany": "DE",
+    "Greece": "GR",
+    "Guadeloupe": "GP",
+    "Guatemala": "GT",
+    "Honduras": "HN",
+    "Hungary": "HU",
+    "Iceland": "IS",
+    "Indonesia": "ID",
+    "Ireland": "IE",
+    "Israel": "IL",
+    "Kosovo": "XK",
+    "Kuwait": "KW",
+    "Latvia": "LV",
+    "Lithuania": "LT",
+    "Luxembourg": "LU",
+    "Malaysia": "MY",
+    "Malta": "MT",
+    "Martinique": "MQ",
+    "Mexico": "MX",
+    "Mongolia": "MN",
+    "Montenegro": "ME",
+    "Netherlands (Kingdom of the)": "NL",
+    "New Zealand": "NZ",
+    "Nicaragua": "NI",
+    "Nigeria": "NG",
+    "North Macedonia": "MK",
+    "Panama": "PA",
+    "Peru": "PE",
+    "Poland": "PL",
+    "Portugal": "PT",
+    "Puerto Rico": "PR",
+    "Qatar": "QA",
+    "Republic of Korea (the)": "KR",
+    "Republic of Moldova (the)": "MD",
+    "Réunion": "RE",
+    "Romania": "RO",
+    "Saudi Arabia": "SA",
+    "Serbia": "RS",
+    "Singapore": "SG",
+    "Slovakia": "SK",
+    "Slovenia": "SI",
+    "South Africa": "ZA",
+    "Spain": "ES",
+    "Sri Lanka": "LK",
+    "Switzerland": "CH",
+    "Thailand": "TH",
+    "Türkiye": "TR",
+    "Ukraine": "UA",
+    "United Arab Emirates (the)": "AE",
+    "United Kingdom of Great Britain and Northern Ireland (the)": "GB",
+    "Uruguay": "UY",
+}
 
 IRENA_MODE_MAPPING = {
     "Biogas": "biomass",
@@ -28,7 +104,6 @@ IRENA_MODE_MAPPING = {
     "Oil": "oil",
     "Other non-renewable energy": "unknown",
 }
-
 
 SPECIFIC_MODE_MAPPING = {"IS": {"Fossil fuels n.e.s.": "oil"}}
 
@@ -94,20 +169,21 @@ def format_capacity(target_datetime: datetime, data: pd.DataFrame) -> dict:
 
 
 def fetch_production_capacity_for_all_zones(
-    path: str, target_datetime: str, zone_key: ZoneKey = "IRENA"
+    path: str, target_datetime: datetime
 ) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_capacity_data(path, target_datetime.year)
-    for zone in all_capacity:
-        update_zone(zone, all_capacity[zone])
-        print(f"Updated capacity for {zone} in {target_datetime.year}")
+    print(f"Fetched capacity data from IRENA for {target_datetime.year}")
+    return all_capacity
+
 
 
 def fetch_production_capacity(
-    path: str, target_datetime: str, zone_key: ZoneKey
+    path: str, target_datetime: datetime, zone_key: ZoneKey
 ) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_capacity_data(path, target_datetime)
     zone_capacity = all_capacity[zone_key]
-    update_zone(zone_key, zone_capacity)
-    print(f"Updated capacity for {zone_key} in {target_datetime.year}")
+    if zone_capacity:
+        print(f"Updated capacity for {zone_key} in {target_datetime.year}: \n{zone_capacity}")
+        return zone_capacity
+    else:
+        raise ValueError(f"No capacity data for {zone_key} in {target_datetime.year}")

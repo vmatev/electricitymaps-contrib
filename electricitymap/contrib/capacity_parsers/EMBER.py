@@ -5,7 +5,6 @@ import pycountry
 
 from electricitymap.contrib.capacity_parsers.constants import EMBER_ZONES
 from electricitymap.contrib.config import ZoneKey
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 EMBER_VARIABLE_TO_MODE = {
     "Bioenergy": "biomass",
@@ -111,20 +110,20 @@ def get_capacity_dict_from_df(df_capacity: pd.DataFrame) -> dict:
 
 
 def fetch_production_capacity_for_all_zones(
-    target_datetime: str, path: str, zone_key: ZoneKey = "EMBER"
+    target_datetime: datetime, path: str
 ) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_data_from_csv(path, target_datetime.year)
-    for zone in all_capacity:
-        update_zone(zone, all_capacity[zone])
-        print(f"Updated capacity for {zone} in {target_datetime.year}")
+    print(f"Fetched capacity data from Ember for {target_datetime.year}")
+    return all_capacity
 
 
 def fetch_production_capacity(
-    target_datetime: str, path: str, zone_key: ZoneKey
+    target_datetime: datetime, path: str, zone_key: ZoneKey
 ) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
     all_capacity = get_data_from_csv(path, target_datetime.year)
     zone_capacity = all_capacity[zone_key]
-    update_zone(zone_key, zone_capacity)
-    print(f"Updated capacity for {zone_key} in {target_datetime.year}")
+    if zone_capacity:
+        print(f"Updated capacity for {zone_key} in {target_datetime.year}: \n {zone_capacity}")
+        return zone_capacity
+    else:
+        raise ValueError(f"No capacity data for {zone_key} in {target_datetime.year}")

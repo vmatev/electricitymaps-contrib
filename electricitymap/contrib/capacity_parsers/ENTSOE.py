@@ -1,18 +1,14 @@
-import argparse
 from datetime import datetime
-from typing import Dict, List
+from logging import getLogger
 
 from bs4 import BeautifulSoup
 from requests import Session
 
 from electricitymap.contrib.capacity_parsers.constants import (
-    AGGREGATED_ZONE_MAPPING,
     CAPACITY_PARSER_SOURCE_TO_ZONES,
 )
-from electricitymap.contrib.config import CONFIG_DIR, ZoneKey
-from electricitymap.contrib.config.reading import read_zones_config
+from electricitymap.contrib.config import ZoneKey
 from parsers.ENTSOE import ENTSOE_DOMAIN_MAPPINGS, query_ENTSOE
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 """
 Update capacity configurations for ENTOS-E zones for a chosen year.
@@ -21,7 +17,7 @@ The zones included are: ["DK-DK1","DK-DK2", "NO-NO1","NO-NO2","NO-NO3","NO-NO4",
 Example usage:
     poetry run python scripts/capacity_parsers/ENTSOE_capacity_parser.py
 """
-
+logger = getLogger(__name__)
 SOURCE = "entsoe.eu"
 
 ENDPOINT = "/api"
@@ -77,7 +73,7 @@ def query_capacity(
     )
 
 
-def get_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: datetime) -> dict:
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: datetime) -> dict:
     xml_str = query_capacity(
         ENTSOE_DOMAIN_MAPPINGS[zone_key], Session(), target_datetime
     )
@@ -104,94 +100,27 @@ def get_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: datetime) -> d
                 fuel_capacity_dict["datetime"] = end_date.strftime("%Y-01-01")
                 fuel_capacity_dict["source"] = SOURCE
                 capacity_dict[ENTSOE_PARAMETER_TO_MODE[fuel_code]] = fuel_capacity_dict
-    if capacity_dict == {}:
-        raise ValueError(
+    if capacity_dict:
+        print(
+            f"ENTSO-E capacity parser found capacity data for {zone_key} on {target_datetime.date()}: \n{capacity_dict}"
+        )
+        return capacity_dict
+    else:
+        logger.warning(
             f"ENTSO-E capacity parser failed to find capacity data for {zone_key} on {target_datetime.date()}"
         )
-    return capacity_dict
 
 
-def fetch_all_capacity(target_datetime: datetime) -> dict:
+def fetch_production_capacity_for_all_zones(target_datetime: datetime) -> dict:
     capacity_dict = {}
     for zone in ENTSOE_ZONES:
         try:
-            zone_capacity = get_capacity_for_one_zone(zone, target_datetime)
+            zone_capacity = fetch_production_capacity(zone, target_datetime)
             capacity_dict[zone] = zone_capacity
-            print(f"Updated capacity for {zone} on {target_datetime.date()}")
+            print(
+                f"Fetched capacity for {zone} on {target_datetime.date()}: {zone_capacity}"
+            )
         except:
             print(f"Failed to update capacity for {zone} on {target_datetime.date()}")
             continue
-
     return capacity_dict
-
-
-def fetch_production_capacity_for_all_zones(
-    target_datetime: str, zone_key: ZoneKey = "ENTSOE", path: str = None
-) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    for zone in ENTSOE_ZONES:
-        zone_capacity = get_capacity_for_one_zone(zone, target_datetime)
-        update_zone(zone, zone_capacity)
-        print(f"Updated capacity for {zone} on {target_datetime.date()}")
-
-
-def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    zone_capacity = get_capacity_for_one_zone(zone_key, target_datetime)
-    update_zone(zone_key, zone_capacity)
-    print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
-
-
-def update_aggregated_zone_capacities(zone_capacity_list: List[Dict[str, float]]):
-    aggregated_zone_capacity = zone_capacity_list[0]
-    for subzone_capacity in zone_capacity_list[1:]:
-        for mode in subzone_capacity:
-            if mode in aggregated_zone_capacity:
-                aggregated_zone_capacity[mode]["value"] += subzone_capacity[mode][
-                    "value"
-                ]
-            else:
-                aggregated_zone_capacity[mode] = subzone_capacity[mode]
-    return aggregated_zone_capacity
-
-
-def gets_and_update_aggregated_capacities(target_datetime: str) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    for zone in AGGREGATED_ZONE_MAPPING:
-        zone_capacity_list = []
-        for subzone in AGGREGATED_ZONE_MAPPING[zone]:
-            zone_capacity_list.append(
-                get_capacity_for_one_zone(subzone, target_datetime)
-            )
-        aggregated_zone_capacity = update_aggregated_zone_capacities(zone_capacity_list)
-        update_zone(zone, aggregated_zone_capacity)
-
-
-def update_aggregated_capacities(zone_key: ZoneKey, target_datetime: datetime) -> None:
-    ZONES_CONFIG = read_zones_config(CONFIG_DIR)
-    zone_capacity_list = []
-    for zone in AGGREGATED_ZONE_MAPPING[zone_key]:
-        zone_config_capacity = ZONES_CONFIG[zone]["capacity"]
-        zone_capacity = {}
-        for mode in zone_config_capacity:
-            if type(zone_config_capacity[mode]) == dict:
-                zone_capacity[mode] = zone_config_capacity[mode]
-            elif type(zone_config_capacity[mode]) == list:
-                # return item in list that has the same datetime as target_datetime
-                i = 0
-                while i < len(zone_config_capacity[mode]):
-                    if zone_config_capacity[mode][i]["datetime"] == target_datetime:
-                        zone_capacity[mode] = zone_config_capacity[mode][i]
-                        break
-                    i += 1
-            elif (type(zone_config_capacity[mode]) == float) or (
-                type(zone_config_capacity[mode]) == int
-            ):
-                zone_capacity[mode] = {}
-                zone_capacity[mode]["value"] = zone_config_capacity[mode]
-
-        zone_capacity_list.append(zone_capacity)
-
-    aggregated_zone_capacity = update_aggregated_zone_capacities(zone_capacity_list)
-
-    update_zone(zone_key, aggregated_zone_capacity)

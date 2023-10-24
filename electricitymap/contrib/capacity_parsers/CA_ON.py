@@ -4,7 +4,6 @@ import pandas as pd
 from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 MODE_MAPPING = {
     "Nuclear": "nuclear",
@@ -16,7 +15,7 @@ MODE_MAPPING = {
 }
 
 
-def get_capacity_data(target_datetime: datetime):
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: datetime):
     url = f"https://www.ieso.ca/-/media/Files/IESO/Document-Library/planning-forecasts/reliability-outlook/ReliabilityOutlookTables_{target_datetime.strftime('%Y%b')}.ashx"
     r: Response = Session().get(url)
     if r.status_code == 200:
@@ -33,15 +32,9 @@ def get_capacity_data(target_datetime: datetime):
                 "value": round(data["value"], 2),
                 "source": "ieso.ca",
             }
+        print(f"Fetched capacity for {zone_key} on {target_datetime.date()}: \n{capacity}")
         return capacity
     else:
         raise ValueError(
             f"Failed to fetch capacity data for IESO at {target_datetime.strftime('%Y-%m')}"
         )
-
-
-def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    zone_capacity = get_capacity_data(target_datetime)
-    update_zone(zone_key, zone_capacity)
-    print(f"Updated capacity for {zone_key} on {target_datetime.date()}")

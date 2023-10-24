@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 MODE_MAPPING = {
     "Hídrico": "hydro",
@@ -20,7 +19,7 @@ MODE_MAPPING = {
 }
 
 
-def get_capacity_data(target_datetime: datetime):
+def fetch_production_capacity(zone_key:ZoneKey, target_datetime: datetime) -> dict:
     url = "https://www.coordinador.cl/reportes-y-estadisticas/#Estadisticas"
     r: Response = Session().get(url)
     soup = BeautifulSoup(r.text, "html.parser")
@@ -48,15 +47,9 @@ def get_capacity_data(target_datetime: datetime):
             mode_capacity["value"] = round(data["value"], 0)
             mode_capacity["source"] = "coordinador.cl"
             capacity[data["mode"]] = mode_capacity
+        print(f"Fetched capacity for {zone_key} on {target_datetime.date()}: \n {capacity}")
         return capacity
     else:
         raise ValueError(
             f"CL: No capacity data available for year {target_datetime.year}"
         )
-
-
-def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    zone_capacity = get_capacity_data(target_datetime)
-    update_zone(zone_key, zone_capacity)
-    print(f"Updated capacity for {zone_key} on {target_datetime.date()}")

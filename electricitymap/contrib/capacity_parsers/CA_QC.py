@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 """Disclaimer: only valid for real-time data, historical capacity is not available"""
 
@@ -22,7 +21,7 @@ MODE_MAPPING = {
 }
 
 
-def get_capacity_data():
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: datetime) -> dict:
     r: Response = Session().get(
         "https://www.hydroquebec.com/generation/generating-stations.html"
     )
@@ -72,11 +71,8 @@ def get_capacity_data():
             "value": data["value"],
             "source": "hydroquebec.com",
         }
-    return capacity_dict
-
-
-def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    zone_capacity = get_capacity_data()
-    update_zone(zone_key, zone_capacity)
-    print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
+    if capacity_dict:
+        print(f"Fetched capacity for {zone_key} on {target_datetime.date()}: \n {capacity_dict}")
+        return capacity_dict
+    else:
+        raise ValueError(f"CA_QC: No capacity data available for {target_datetime.date()}")

@@ -1,14 +1,13 @@
 from datetime import datetime
-from logging import Logger, getLogger
+from logging import getLogger
 from typing import Dict, Union
 
 import pandas as pd
 from requests import Response, Session
 
-from electricitymap.contrib.config import ZONES_CONFIG, ZoneKey
+from electricitymap.contrib.config import ZoneKey
 from parsers.EIA import REGIONS
 from parsers.lib.utils import get_token
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 logger = getLogger(__name__)
 CAPACITY_URL = "https://api.eia.gov/v2/electricity/operating-generator-capacity/data/?frequency=monthly&data[0]=nameplate-capacity-mw&facets[balancing_authority_code][]={}"
@@ -44,22 +43,6 @@ TECHNOLOGY_TO_MODE = {
     "Wood/Wood Waste Biomass": "biomass",
 }
 
-
-def fetch_capacity(
-    zone_key: str,
-    target_datetime: datetime,
-    logger: Logger = getLogger(__name__),
-) -> Union[Dict, None]:
-    url_prefix = CAPACITY_URL.format(REGIONS[zone_key])
-    url = f'{url_prefix}&api_key={API_KEY}&start={target_datetime.strftime("%Y-%m")}-01&end={target_datetime.strftime("%Y-%m")}-12&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=5000'
-    r: Response = Session().get(url)
-    json_data = r.json()
-    if not json_data.get("response", {}).get("data", []) == []:
-        data = pd.DataFrame(json_data["response"]["data"])
-        capacity_dict = format_capacity(data, target_datetime)
-        return capacity_dict
-
-
 def format_capacity(df: pd.DataFrame, target_datetime: datetime) -> dict:
     df = df.copy()
     df = df.loc[df["statusDescription"] == "Operating"]
@@ -79,26 +62,32 @@ def format_capacity(df: pd.DataFrame, target_datetime: datetime) -> dict:
     return capacity_dict
 
 
-def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    zone_capacity = fetch_capacity(zone_key, target_datetime)
-    if zone_capacity is not None:
-        if zone_key in ZONES_CONFIG:
-            update_zone(zone_key, zone_capacity)
+def fetch_production_capacity(
+    zone_key: ZoneKey,
+    target_datetime: datetime,
+) -> Union[Dict, None]:
+    url_prefix = CAPACITY_URL.format(REGIONS[zone_key])
+    url = f'{url_prefix}&api_key={API_KEY}&start={target_datetime.strftime("%Y-%m")}-01&end={target_datetime.strftime("%Y-%m")}-12&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=5000'
+    r: Response = Session().get(url)
+    json_data = r.json()
+    if not json_data.get("response", {}).get("data", []) == []:
+        data = pd.DataFrame(json_data["response"]["data"])
+        capacity_dict = format_capacity(data, target_datetime)
+        print(f"Fetched capacity data for {zone_key} at {target_datetime.strftime('%Y-%m')}: \n{capacity_dict}")
+        return capacity_dict
     else:
         logger.warning(
             f"Failed to fetch capacity data for {zone_key} at {target_datetime.strftime('%Y-%m')}"
         )
 
 
+
 def fetch_production_capacity_for_all_zones(
-    target_datetime: str, zone_key: ZoneKey = "EIA", path: str = None
+    target_datetime: datetime
 ) -> pd.DataFrame:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
+    eia_capacity ={}
     for zone in US_ZONES:
-        zone_capacity = fetch_capacity(zone, target_datetime)
-        if zone in ZONES_CONFIG:
-            update_zone(zone, zone_capacity)
-            print(
-                f"Fetched and updated capacity data for {zone} at {target_datetime.strftime('%Y-%m')}"
-            )
+        zone_capacity = fetch_production_capacity(zone, target_datetime)
+        eia_capacity[zone] = zone_capacity
+    return eia_capacity
+

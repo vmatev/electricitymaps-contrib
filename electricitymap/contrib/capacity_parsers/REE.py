@@ -1,12 +1,12 @@
 from datetime import datetime
+from logging import getLogger
 
 from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 """Disclaimer: Capacity for the Spanish isles is only avilable per archipelago."""
-
+logger = getLogger(__name__)
 MODE_MAPPING = {
     "Hidráulica": "hydro",
     "Turbinación bombeo": "hydro storage",
@@ -51,7 +51,7 @@ ZONE_KEY_TO_GEO_LIMIT = {
 }
 
 
-def get_capacity_data(zone_key: ZoneKey, target_datetime: datetime):
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: datetime):
     geo_limit = ZONE_KEY_TO_GEO_LIMIT[zone_key]
     geo_ids = GEO_LIMIT_TO_GEO_IDS[geo_limit]
     url = f"https://apidatos.ree.es/es/datos/generacion/potencia-instalada?start_date={target_datetime.strftime('%Y-01-01T00:00')}&end_date={target_datetime.strftime('%Y-12-31T23:59')}&time_trunc=year&geo_trunc=electric_system&geo_limit={geo_limit}&geo_ids={geo_ids}&tecno_select=all"
@@ -71,30 +71,20 @@ def get_capacity_data(zone_key: ZoneKey, target_datetime: datetime):
                         "source": "ree.es",
                     }
                     capacity[mode] = mode_capacity
+        print(f"Fetched capacity for {zone_key} on {target_datetime.date()}: \n{capacity}")
         return capacity
     else:
-        raise ValueError(
+        logger.warning(
             f"{zone_key}: No capacity data available for year {target_datetime.year}"
         )
 
 
-def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    zone_capacity = get_capacity_data(zone_key, target_datetime)
-    update_zone(zone_key, zone_capacity)
-    print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
-
-
 def fetch_production_capacity_for_all_zones(
-    target_datetime: str, zone_key: ZoneKey = "REE", path: str = None
-) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
+    target_datetime: datetime,
+) -> dict:
+    ree_capacity = {}
     for zone in ZONE_KEY_TO_GEO_LIMIT:
-        zone_capacity = get_capacity_data(zone, target_datetime)
-        print(zone_capacity)
-        update_zone(zone, zone_capacity)
-        print(f"Updated capacity for {zone} on {target_datetime.date()}")
-
-
-if __name__ == "__main__":
-    fetch_production_capacity_for_all_zones("2023-01-01")
+        zone_capacity = fetch_production_capacity(zone, target_datetime)
+        ree_capacity[zone] = zone_capacity
+    print(f"Fetched capacity for REE zones on {target_datetime.date()}")
+    return ree_capacity

@@ -1,11 +1,10 @@
-from datetime import datetime, timezone
+from datetime import datetime
 
 import pandas as pd
 from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
 from parsers.OPENNEM import SOURCE, ZONE_KEY_TO_REGION
-from scripts.utils import convert_datetime_str_to_isoformat, update_zone
 
 """Disclaimer: only works for real-time data. There is retired capacity included but we do not have the information on when the capacity was retired."""
 
@@ -78,7 +77,7 @@ def filter_capacity_data_by_datetime(
     return df
 
 
-def get_capacity_for_all_zones(target_datetime: datetime):
+def fetch_production_capacity_for_all_zones(target_datetime: datetime):
     capacity_df = get_opennem_capacity_data()
 
     capacity_df = filter_capacity_data_by_datetime(capacity_df, target_datetime)
@@ -104,33 +103,17 @@ def get_capacity_for_all_zones(target_datetime: datetime):
     return capacity
 
 
-def get_capacity_for_one_zone(zone_key: ZoneKey, target_datetime: str):
-    return get_capacity_for_all_zones(target_datetime)[zone_key]
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: datetime):
+    capacity  = fetch_production_capacity_for_all_zones(target_datetime)[zone_key]
+    if capacity:
+        print(f"Updated capacity for {zone_key} in {target_datetime}: \n{capacity}")
+        return capacity
+    else:
+        raise ValueError(f"No capacity data for {zone_key} in {target_datetime}")
 
 
-def fetch_production_capacity_for_all_zones(
-    target_datetime: str, zone_key: ZoneKey = "OPENNEM", path: str = None
-):
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime).replace(
-        tzinfo=timezone.utc
-    )
-    capacity = get_capacity_for_all_zones(target_datetime)
-    for zone in capacity:
-        update_zone(zone, capacity[zone])
+def get_solar_capacity_au_nt(target_datetime: datetime):
 
-
-def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str):
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime).replace(
-        tzinfo=timezone.utc
-    )
-    capacity = get_capacity_for_all_zones(target_datetime)[zone_key]
-    update_zone(zone_key, capacity)
-
-
-def get_solar_capacity_au_nt(target_datetime: str):
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime).replace(
-        tzinfo=timezone.utc
-    )
     capacity_df = get_opennem_capacity_data()
     capacity_df = filter_capacity_data_by_datetime(capacity_df, target_datetime)
 

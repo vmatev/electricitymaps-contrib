@@ -3,6 +3,7 @@ Usage: poetry run test_parser FR production
 """
 
 import importlib
+from datetime import datetime
 from logging import DEBUG, basicConfig, getLogger
 
 import click
@@ -12,7 +13,7 @@ from electricitymap.contrib.capacity_parsers.constants import (
 )
 from electricitymap.contrib.lib.types import ZoneKey
 from parsers.lib.parsers import PARSER_KEY_TO_DICT
-from scripts.utils import ROOT_PATH, run_shell_command
+from scripts.utils import ROOT_PATH, run_shell_command, update_zone
 
 logger = getLogger(__name__)
 basicConfig(level=DEBUG, format="%(asctime)s %(levelname)-8s %(name)-30s %(message)s")
@@ -52,6 +53,13 @@ def capacity_parser(
     # TODO add source argument to update zone groups (can be source or zone)
     assert zone is not None or source is not None
     assert not (zone is None and source is None)
+
+    parsed_target_datetime = None
+    if target_datetime is not None:
+        parsed_target_datetime = datetime.fromisoformat(target_datetime)
+    else:
+        raise ValueError("target_datetime must be specified")
+
     if source is not None:
         if source not in CAPACITY_PARSER_SOURCE_TO_ZONES:
             raise ValueError(f"No capacity parser developed for {source}")
@@ -62,9 +70,12 @@ def capacity_parser(
         if source in ["EMBER", "IRENA"]:
             if path is None:
                 raise ValueError("path must be specified for EMBER or IRENA zones")
-            parser(target_datetime=target_datetime, path=path)
+            source_capacity = parser(target_datetime=parsed_target_datetime, path=path)
         else:
-            parser(target_datetime=target_datetime)
+            source_capacity = parser(target_datetime=parsed_target_datetime)
+
+        for zone in source_capacity:
+            update_zone(zone, source_capacity[zone])
 
     elif zone is not None:
         if zone not in CAPACITY_PARSERS:
@@ -77,9 +88,12 @@ def capacity_parser(
         ):
             if path is None:
                 raise ValueError("path must be specified for EMBER or IRENA zones")
-            parser(target_datetime=target_datetime, path=path, zone_key=zone)
+            zone_capacity= parser(target_datetime=parsed_target_datetime, path=path, zone_key=zone)
         else:
-            parser(zone_key=zone, target_datetime=target_datetime)
+            zone_capacity= parser(zone_key=zone, target_datetime=parsed_target_datetime)
+
+        update_zone(zone, zone_capacity)
+
 
     print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)

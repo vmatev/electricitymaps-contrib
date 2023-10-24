@@ -1,4 +1,4 @@
-import argparse
+
 import json
 from datetime import datetime
 
@@ -6,19 +6,13 @@ import pandas as pd
 from requests import Response, Session
 
 from electricitymap.contrib.config import ZoneKey
-from scripts.utils import (
-    ROOT_PATH,
-    convert_datetime_str_to_isoformat,
-    run_shell_command,
-    update_zone,
-)
 
 """Disclaimer: only valid for real-time data, historical capacity is not available"""
 
 MODE_MAPPING = {"Gas": "gas", "Water": "hydro", "Coal": "coal", "Solar": "solar"}
 
 
-def get_capacity_data(target_datetime: datetime) -> dict:
+def fetch_production_capacity(zone_key:ZoneKey, target_datetime: datetime) -> dict:
     url = "https://www.gso.org.my/SystemData/PowerStation.aspx/GetDataSource"
 
     headers = {
@@ -55,15 +49,9 @@ def get_capacity_data(target_datetime: datetime) -> dict:
                 "source": "gso.org.my",
                 "datetime": target_datetime.strftime("%Y-%m-%d"),
             }
+        print(f"Fetched capacity for {zone_key} on {target_datetime.date()}: \n{capacity_dict}")
         return capacity_dict
     else:
         raise ValueError(
             f"Failed to fetch capacity data for GSO at {target_datetime.strftime('%Y-%m')}"
         )
-
-
-def fetch_production_capacity(zone_key: ZoneKey, target_datetime: str) -> None:
-    target_datetime = convert_datetime_str_to_isoformat(target_datetime)
-    zone_capacity = get_capacity_data(target_datetime)
-    update_zone(zone_key, zone_capacity)
-    print(f"Updated capacity for {zone_key} on {target_datetime.date()}")
