@@ -27,7 +27,7 @@ The goal here is to validate each incoming production parser event by comparing 
 
 To achieve this goal, we need robust and consistent capacity data. We also need to be able to capture the evolution of capacity data over time. As renewable capacity increases in most zones, this means that the power production will also increase.
 
-## Capacity sources <a name="#capacity_sources"></a>
+## Capacity sources <a name="capacity_sources"></a>
 
  Of all electricity data available, capacity is probably the least consistent (eg different reporting standards, different update frequencies, accessibility). A review of available capaicty data was done for this project in order to manage the number of different data sources used for capacity and to ensure that the capacity data has been reviewed and has an overall quality level.
 
@@ -45,14 +45,14 @@ To achieve this goal, we need robust and consistent capacity data. We also need 
 
 In the case of countries divided in subzones, capacity data is collected directly from the main data source. This is the case for Brasil, Australia or Spain for instance.
 
-## Capacity update process <a name="#capacity_update_process"></a>
+## Capacity update process <a name="capacity_update_process"></a>
 
 There are two ways of updating capacity configuration files:
 
 - The zone has a capacity parser
 - The update must be done manually.
 
-### Format of the capacity configuration  <a name="#format"></a>
+### Format of the capacity configuration  <a name="format"></a>
 The capacity configuration should include the date from which the value is valid.
 
 For a chosen mode, a data point needs to include the following fields:
@@ -70,14 +70,14 @@ capacity
     ├── source: "ENTSOE"
     └── value: 5233
 ```
-### Opening a PR  <a name="#PR"></a>
+### Opening a PR  <a name="PR"></a>
 Before opening a PR to update capacity data, you should check the following:
 
 - **Do not update all capacities at once!** Smaller PRs will help us make sure that no error slips through the cracks. We recommend updated a few zones at once or by group of zones (EIA, ENTSOE, EMBER, IRENA etc.)
 - **The new data points are consistent with the previous ones.** Big breaks in trends are rare for capacity data. You should check whether the variation between two data points is realistic. We expect that renewable capacity will increase in the coming years and fossil capacity to decrease,so these are patterns to look out for.
 - **Reference main changes in the PR description**. If you spot a major change in values, please mention it and verify it. This will make the reviewer's job easier!
 
-### The zone capacity can be updated automatically <a name="#automatic_update"></a>
+### The zone capacity can be updated automatically <a name="automatic_update"></a>
 For some zones, we have developed capacity parsers which collect the data automatically.
 
 The update of capacity configurations can be done in the `contrib` repo using `poetry run capacity_parser`.
@@ -303,7 +303,7 @@ The following other zones can also be updated automatically:
 - GB
 - MY-WM
 
-### The zone capacity is updated manually <a name="#manual_update"></a>
+### The zone capacity is updated manually <a name="manual_update"></a>
 For the following zones, a capacity parser is not available. You will find the instructions to extract the latest capacity information below. Once the data is collected, the capacity configuration should be updated using the above mentioned format.
 &nbsp;<details><summary>CA-SK</summary>
 **Main link**: https://www.saskpower.com/Our-Power-Future/Our-Electricity/Electrical-System/System-Map
@@ -534,7 +534,7 @@ Solar capacity is available on **OPENNEM**, this data can be collected using the
 </table>
 &nbsp;</details>
 
-## Technical requirements for adding a new data source <a name="#technical_requirements"></a>
+## Technical requirements for adding a new data source <a name="technical_requirements"></a>
 
 If a new data source becomes available for a zone that does **not** have a capacity parser:
 
