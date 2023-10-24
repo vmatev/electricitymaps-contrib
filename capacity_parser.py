@@ -64,7 +64,7 @@ def capacity_parser(
         if source not in CAPACITY_PARSER_SOURCE_TO_ZONES:
             raise ValueError(f"No capacity parser developed for {source}")
         parser = getattr(
-            importlib.import_module(f"capacity_parsers.{source}"),
+            importlib.import_module(f"electricitymap.contrib.capacity_parsers.{source}"),
             "fetch_production_capacity_for_all_zones",
         )
         if source in ["EMBER", "IRENA"]:
@@ -75,7 +75,10 @@ def capacity_parser(
             source_capacity = parser(target_datetime=parsed_target_datetime)
 
         for zone in source_capacity:
-            update_zone(zone, source_capacity[zone])
+            if not source_capacity[zone]:
+                print(f"No capacity data for {zone} in {target_datetime}")
+            else:
+                update_zone(zone, source_capacity[zone])
 
     elif zone is not None:
         if zone not in CAPACITY_PARSERS:
@@ -91,8 +94,10 @@ def capacity_parser(
             zone_capacity= parser(target_datetime=parsed_target_datetime, path=path, zone_key=zone)
         else:
             zone_capacity= parser(zone_key=zone, target_datetime=parsed_target_datetime)
-
-        update_zone(zone, zone_capacity)
+        if not zone_capacity:
+            raise ValueError(f"No capacity data for {zone} in {target_datetime}")
+        else:
+            update_zone(zone, zone_capacity)
 
 
     print(f"Running prettier...")
