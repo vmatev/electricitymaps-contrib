@@ -17,7 +17,7 @@
 ## Context <a name="#context"></a>
 In  an effort to increase the quality of the data published on our app or API, we have started a whole initiative to enable us to track outliers in the source data.
 
-Over the years, we have noticed that sometimes, real-time data published by the different data sources can be completely outside the distribution of the historical time-series. These data points are outliers and need to be detected before any data processing.
+Over the years, we have noticed that real-time data published by the different data sources can be completely outside the distribution of the historical time-series. These data points are outliers and need to be detected before any data processing.
 
 One way to perform outlier detection is to check that each incoming data point is not higher than the installed capacity for a given mode. The power output cannot be above the energy input as the efficiency of power plants is always below 100%. In other words, for a given zone and a given mode, the power production for that mode at any given time cannot exceed the installed capacity for that mode.
 
@@ -30,9 +30,7 @@ To achieve this goal, we need robust and consistent capacity data. We also need 
 
 ## Capacity sources <a name="capacity_sources"></a>
 
- Of all electricity data available, capacity is probably the least consistent (eg different reporting standards, different update frequencies, accessibility). A review of available capaicty data was done for this project in order to manage the number of different data sources used for capacity and to ensure that the capacity data has been reviewed and has an overall quality level.
-
- Limiting the number of sources for capacity data also increases the maintainability of the entire dataset.
+ Of all electricity data available, capacity is probably the least consistent (e.g. different reporting standards, different update frequencies, accessibility). A review of available capacity data was done in order to manage the number of different data sources used for capacity and to ensure that the capacity data has been reviewed and has an overall consistent quality level.
 
  The main organisations that published capacity data are:
 
@@ -66,9 +64,9 @@ We would like to update the capacity data for **all zones** once per year, aroun
 The capacity configuration should include the date from which the value is valid.
 
 For a chosen mode, a data point needs to include the following fields:
-- value: the installed capacity for the chosen mode,
-- datetime: from this date forward, the value is considered to be the most up-to-date
-- source: the data source
+- **value**: the installed capacity for the chosen mode,
+- **datetime**: from this date forward, the value is considered to be the most up-to-date
+- **source**: the data source
 
 This format will enable us to track the evolution of capacity across different zones over time such as the increase of renewables or phase out of fossil power plants.
 
