@@ -1,4 +1,4 @@
-# Capacity update process
+# Capacity update process <a name="#top"></a>
 
 ## Table of contents
 - [Context](#context)
@@ -29,6 +29,7 @@ The goal here is to validate each incoming production parser event by comparing 
 To achieve this goal, we need robust and consistent capacity data. We also need to be able to capture the evolution of capacity data over time. As renewable capacity increases in most zones, this means that the power production will also increase.
 
 ## Capacity sources <a name="capacity_sources"></a>
+[(back to top)](#top)
 
  Of all electricity data available, capacity is probably the least consistent (e.g. different reporting standards, different update frequencies, accessibility). A review of available capacity data was done in order to manage the number of different data sources used for capacity and to ensure that the capacity data has been reviewed and has an overall consistent quality level.
 
@@ -45,6 +46,7 @@ To achieve this goal, we need robust and consistent capacity data. We also need 
 In the case of countries divided in subzones, capacity data is collected directly from the main data source. This is the case for Brasil, Australia or Spain for instance.
 
 ## Capacity update process <a name="capacity_update_process"></a>
+[(back to top)](#top)
 
 There are two ways of updating capacity configuration files:
 
@@ -52,6 +54,8 @@ There are two ways of updating capacity configuration files:
 - The update must be done manually.
 
 ### When should capacity data be updated? <a name="when_to_update"></a>
+[(back to top)](#top)
+
 Depending on the source, capacity data can be updated at a more or less regular frequency.
 
 In the case of EMBER, IRENA and ENTSO-e, capacity data is updated once a year with data for the previous year. This update usually happens in the third quarter of the year (June to September of Y+1). The capacity for these zones should therefore be updated **once per year**.
@@ -61,6 +65,8 @@ The EIA updates their capacity dataset on a monthly basis so updates can happen 
 We would like to update the capacity data for **all zones** once per year, around the 3rd quarter. This can be done more for capacity that are updated every month or quarter but it is not absolutely required.
 
 ### Format of the capacity configuration  <a name="format"></a>
+[(back to top)](#top)
+
 The capacity configuration should include the date from which the value is valid.
 
 For a chosen mode, a data point needs to include the following fields:
@@ -79,6 +85,8 @@ capacity
     └── value: 5233
 ```
 ### Opening a PR  <a name="PR"></a>
+[(back to top)](#top)
+
 Before opening a PR to update capacity data, you should check the following:
 
 - **Do not update all capacities at once!** Smaller PRs will help us make sure that no error slips through the cracks. We recommend updated a few zones at once or by group of zones (EIA, ENTSOE, EMBER, IRENA etc.)
@@ -86,6 +94,8 @@ Before opening a PR to update capacity data, you should check the following:
 - **Reference main changes in the PR description**. If you spot a major change in values, please mention it and verify it. This will make the reviewer's job easier!
 
 ### The zone capacity can be updated automatically <a name="automatic_update"></a>
+[(back to top)](#top)
+
 For some zones, we have developed capacity parsers which collect the data automatically.
 
 The update of capacity configurations can be done in the `contrib` repo using `poetry run capacity_parser`.
@@ -310,6 +320,8 @@ The following other zones can also be updated automatically:
 - MY-WM
 
 ### The zone capacity is updated manually <a name="manual_update"></a>
+[(back to top)](#top)
+
 For the following zones, a capacity parser is not available. You will find the instructions to extract the latest capacity information below. Once the data is collected, the capacity configuration should be updated using the above mentioned format.
 &nbsp;<details><summary>AU-NT</summary>
 
@@ -539,6 +551,7 @@ The report is published annually and in pdf format.It should be updated at the e
 
 
 ## Technical requirements for adding a new data source <a name="technical_requirements"></a>
+[(back to top)](#top)
 
 If a new data source becomes available for a zone that does **not** have a capacity parser:
 
@@ -555,6 +568,8 @@ If the capacity for the zone in question is collected using a capacity parser:
 You can create an issue on [contrib](https://github.com/electricitymaps/electricitymaps-contrib/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) if you find a new data source or if an existing link is broken.
 
 ## Building a new capacity parser <a name="building_a_parser"></a>
+[(back to top)](#top)
+
 
 If data can be parsed from an online source, you can build a parser to automatically get this data.
 
