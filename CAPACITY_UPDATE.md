@@ -5,12 +5,14 @@
 - [Capacity source](#capacity_sources)
 - [Capacity update process](#capacity_update_process)
 
+  - [When should capacity data be updated?](#when_to_update)
   - [Format of the capacity configuration](#format)
   - [Opening a PR](#PR)
   - [The zone capacity can be updated automatically](#automatic_update)
   - [The zone capacity is updated manually](#manual_update)
 
 - [Technical requirements for adding a new data source](#technical_requirements)
+- [Building a new capacity parser](#building_a_parser)
 
 ## Context <a name="#context"></a>
 In  an effort to increase the quality of the data published on our app or API, we have started a whole initiative to enable us to track outliers in the source data.
@@ -50,6 +52,15 @@ There are two ways of updating capacity configuration files:
 
 - The zone has a capacity parser
 - The update must be done manually.
+
+### When should capacity data be updated? <a name="when_to_update"></a>
+Depending on the source, capacity data can be updated at a more or less regular frequency.
+
+In the case of EMBER, IRENA and ENTSO-e, capacity data is updated once a year with data for the previous year. This update usually happens in the third quarter of the year (June to September of Y+1). The capacity for these zones should therefore be updated **once per year**.
+
+The EIA updates their capacity dataset on a monthly basis so updates can happen **every semester or every quarter**.
+
+We would like to update the capacity data for **all zones** once per year, around the 3rd quarter. This can be done more for capacity that are updated every month or quarter but it is not absolutely required.
 
 ### Format of the capacity configuration  <a name="format"></a>
 The capacity configuration should include the date from which the value is valid.
@@ -546,3 +557,23 @@ If the capacity for the zone in question is collected using a capacity parser:
 - **Discuss with the Electricity Maps team.** If the new data source is indeed of higher quality and meets all the requirements, feel free to ask the Electricity Maps team. We will find the best way forward otgether :)
 
 You can create an issue on [contrib](https://github.com/electricitymaps/electricitymaps-contrib/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) if you find a new data source or if an existing link is broken.
+
+## Building a new capacity parser <a name="building_a_parser"></a>
+
+If data can be parsed from an online source, you can build a parser to automatically get this data.
+
+Here are the following steps to build a capacity parser:
+
+- **Building the parser.** The parser should include a `fetch_production_capacity` function.
+```{python}
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: datetime)-> Dict[str:Any]:
+  capacity_dict = ....
+  return capacity_dict
+```
+- **Update the zone configuration.** Add the productionCapacity parser to the parsers items.
+```
+parsers:
+  consumption: FR.fetch_consumption
+  production: FR.fetch_production
+  productionCapacity: ENTSOE.fetch_production_capacity
+```
