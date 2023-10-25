@@ -21,6 +21,7 @@ EMBER_ZONES = [
     "MT",
     "MX",
     "NG",
+    "NZ",
     "PA",
     "PE",
     "RU",

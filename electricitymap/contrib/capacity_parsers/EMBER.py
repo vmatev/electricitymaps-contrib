@@ -3,7 +3,9 @@ from datetime import datetime
 import pandas as pd
 import pycountry
 
-from electricitymap.contrib.capacity_parsers.constants import EMBER_ZONES
+from electricitymap.contrib.capacity_parsers.constants import (
+    CAPACITY_PARSER_SOURCE_TO_ZONES,
+)
 from electricitymap.contrib.config import ZoneKey
 
 EMBER_VARIABLE_TO_MODE = {
@@ -32,6 +34,7 @@ SPECIFIC_MODE_MAPPING = {
     "ZA": {"Other Fossil": "oil"},
 }
 
+EMBER_ZONES = CAPACITY_PARSER_SOURCE_TO_ZONES["EMBER"]
 
 def map_variable_to_mode(row: pd.Series) -> pd.DataFrame:
     zone = row["zone_key"]
@@ -68,7 +71,7 @@ def format_ember_data(df: pd.DataFrame, year: int) -> pd.DataFrame:
     df_filtered["country_code_iso2"] = df_filtered["Country code"].apply(
         lambda x: pycountry.countries.get(alpha_3=x).alpha_2
     )
-
+    breakpoint()
     df_filtered = df_filtered.loc[df_filtered["country_code_iso2"].isin(EMBER_ZONES)]
 
     df_capacity = df_filtered[["country_code_iso2", "Year", "Variable", "Value"]]
