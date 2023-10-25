@@ -103,11 +103,11 @@ The `capacity_parser` function has the following arguments:
   <tbody>
     <tr>
       <td>--zone</td>
-      <td>A specific zone (e.g. Dk-DK1)</td>
+      <td>A specific zone (e.g. DK-DK1)</td>
     </tr>
     <tr>
       <td>--source</td>
-      <td>A group of zones (e.g. ENTSOE). The capacity update will run for all the zones that have capacity from this data source </td>
+      <td>A group of zones. The capacity update will run for all the zones that have capacity from this data source. The groups of zones are: EIA, EMBER, ENTSOE, IRENA, ONS, OPENNEM, REE </td>
     </tr>
     <tr>
       <td>--target_datetime</td>
@@ -115,7 +115,7 @@ The `capacity_parser` function has the following arguments:
     </tr>
     <tr>
       <td>--path</td>
-      <td>Path to the data file. In some cases, the data needs to first be downloaded and cannot be directly parsed online. (more below) </td>
+      <td>Path to the data file. In some cases, the data needs to first be downloaded and cannot be directly parsed online.For EMBER and IRENA, this parameter is required as the parser reads the data from a csv/xlsx downloaded by the contributor </td>
     </tr>
   </tbody>
 </table>
@@ -130,8 +130,6 @@ poetry run capacity_parser --source EIA --target_datetime "2023-06-01"
 ```{python}
 poetry run capacity_parser --source EMBER --target_datetime "2022-01-01" --path "/../yearly_full_release_long_format.csv""
 ```
-> **Important note:** For EMBER and IRENA, the --data_path is necessary as the parser reads the data from a csv/xlsx downloaded by the contributor
-
 
 The following zones can be updated with a parser:
 &nbsp;<details><summary>EIA</summary>
