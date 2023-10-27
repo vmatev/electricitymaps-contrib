@@ -29,26 +29,22 @@ CAPACITY_PARSERS = PARSER_KEY_TO_DICT["productionCapacity"]
 @click.option("--zone", default=None)
 @click.option("--source", default=None)
 @click.option("--target_datetime")
-@click.option("--path", default=None, show_default=True)
 @click.option("--update_aggregate", default=False, show_default=True)
 def capacity_parser(
     zone: ZoneKey,
     source: str,
     target_datetime: str,
     update_aggregate: bool = False,
-    path: str = None,
 ):
     """Parameters
     ----------
     zone: a two letter zone from the map or a zone group (EIA, ENTSOE, EMBER, IRENA)
     target_datetime: ISO 8601 string, such as 2018-05-30 15:00
-    path: path to the data file for EMBER or IRENA zones, must be specified if zone is EMBER or IRENA. The data is collected from a spreadsheet or csv previously downloaded
     \n
     Examples
     -------
-    >>> poetry run capacity_parser FR "2022-01-01"
-    >>> poetry run capacity_parser None EMBER "2022-01-01" --path="/../data.csv"
-    >>> poetry run capacity_parser None ENTSOE "2022-01-01"
+    >>> poetry run capacity_parser --zone FR "2022-01-01"
+    >>> poetry run capacity_parser --source ENTSOE "2022-01-01"
     """
     # TODO add source argument to update zone groups (can be source or zone)
     assert zone is not None or source is not None
@@ -67,12 +63,7 @@ def capacity_parser(
             importlib.import_module(f"electricitymap.contrib.capacity_parsers.{source}"),
             "fetch_production_capacity_for_all_zones",
         )
-        if source in ["EMBER", "IRENA"]:
-            if path is None:
-                raise ValueError("path must be specified for EMBER or IRENA zones")
-            source_capacity = parser(target_datetime=parsed_target_datetime, path=path)
-        else:
-            source_capacity = parser(target_datetime=parsed_target_datetime)
+        source_capacity = parser(target_datetime=parsed_target_datetime)
 
         for zone in source_capacity:
             if not source_capacity[zone]:
@@ -84,16 +75,8 @@ def capacity_parser(
         if zone not in CAPACITY_PARSERS:
             raise ValueError(f"No capacity parser developed for {zone}")
         parser = CAPACITY_PARSERS[zone]
-        if (
-            zone
-            in CAPACITY_PARSER_SOURCE_TO_ZONES["EMBER"]
-            + CAPACITY_PARSER_SOURCE_TO_ZONES["IRENA"]
-        ):
-            if path is None:
-                raise ValueError("path must be specified for EMBER or IRENA zones")
-            zone_capacity= parser(target_datetime=parsed_target_datetime, path=path, zone_key=zone)
-        else:
-            zone_capacity= parser(zone_key=zone, target_datetime=parsed_target_datetime)
+
+        zone_capacity= parser(zone_key=zone, target_datetime=parsed_target_datetime)
         if not zone_capacity:
             raise ValueError(f"No capacity data for {zone} in {target_datetime}")
         else:
