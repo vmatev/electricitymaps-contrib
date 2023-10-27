@@ -133,10 +133,6 @@ The `capacity_parser` function has the following arguments:
       <td>--target_datetime</td>
       <td> Date for the capacity data (e.g. "2023-01-01") </td>
     </tr>
-    <tr>
-      <td>--path</td>
-      <td>Path to the data file. In some cases, the data needs to first be downloaded and cannot be directly parsed online.For EMBER and IRENA, this parameter is required as the parser reads the data from a csv/xlsx downloaded by the contributor </td>
-    </tr>
   </tbody>
 </table>
 
@@ -150,9 +146,6 @@ poetry run capacity_parser --zone DK-DK1 --target_datetime "2023-01-01"
 poetry run capacity_parser --source EIA --target_datetime "2023-06-01"
 ```
 
-```{python}
-poetry run capacity_parser --source EMBER --target_datetime "2022-01-01" --path "/../yearly_full_release_long_format.csv""
-```
 
 The following zones can be updated with a parser:
 &nbsp;<details><summary>EIA</summary>
@@ -316,8 +309,7 @@ The following zones can be updated with a parser:
 - ES-ML
 
 > **Note**: For the Canary Islands and the Baleares Islands, only total installed capacity is available.
-> &nbsp;</details>
-> &nbsp;<details><summary>ONS</summary>
+> &nbsp;</details> > &nbsp;<details><summary>ONS</summary>
 
 > **Note**: The capacity parser for Brasil only get connected solar capacity. Distributed solar capacity needs to be added manually and can be found here ([ONS - Installed Capacity Dashboard](https://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao/capacidade_instalada.aspx)). See below for more instructions.
 
@@ -379,8 +371,7 @@ Consider Thermal to be oil generation.
 See data in the section _“La carte au format texte”_
 
 > **Note**: This source may not be updated in the future. Fossil capacity should not change or be mothballed but wind and solar capacity are likely to increase.
-> &nbsp;</details>
-> &nbsp;<details><summary>GT</summary>
+> &nbsp;</details> > &nbsp;<details><summary>GT</summary>
 
 **Main link**: https://ager.org.gt/wp-content/uploads/
 
@@ -452,8 +443,7 @@ See data in the section _“La carte au format texte”_
 </table>
 
 > **Note** GDR corresponds to the distributed generation capacity
-> &nbsp;</details>
-> &nbsp;<details><summary>HN</summary>
+> &nbsp;</details> > &nbsp;<details><summary>HN</summary>
 
 **Main link**: https://siehonduras.olade.org/WebForms/Reportes/VisorDocumentos.aspx?or=453&ss=7&v=1
 
@@ -553,9 +543,7 @@ The report is published every six months and is available in pdf format. The rep
 
 > **Note**:
 > Data has not been updated since 01-01-2020, it would be good to see if an other source exists.
-> &nbsp;</details>
-> &nbsp;<details><summary>SE</summary>
-> **Main link**: https://www.svk.se/om-oss/rapporter-och-remissvar/
+> &nbsp;</details> > &nbsp;<details><summary>SE</summary> > **Main link**: https://www.svk.se/om-oss/rapporter-och-remissvar/
 
 **Report name**: Kraftbalansen på den svenska elmarknaden, rapport YYYY
 

@@ -43,8 +43,8 @@ def capacity_parser(
     \n
     Examples
     -------
-    >>> poetry run capacity_parser --zone FR "2022-01-01"
-    >>> poetry run capacity_parser --source ENTSOE "2022-01-01"
+    >>> poetry run capacity_parser --zone FR --target_datetime "2022-01-01"
+    >>> poetry run capacity_parser --source ENTSOE --target_datetime "2022-01-01"
     """
     # TODO add source argument to update zone groups (can be source or zone)
     assert zone is not None or source is not None
