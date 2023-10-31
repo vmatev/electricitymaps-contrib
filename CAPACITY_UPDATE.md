@@ -311,12 +311,18 @@ The following zones can be updated with a parser:
 > **Note**: For the Canary Islands and the Baleares Islands, only total installed capacity is available.
 > &nbsp;</details> > &nbsp;<details><summary>ONS</summary>
 
-> **Note**: The capacity parser for Brasil only get connected solar capacity. Distributed solar capacity needs to be added manually and can be found here ([ONS - Installed Capacity Dashboard](https://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao/capacidade_instalada.aspx)). See below for more instructions.
-
 - BR-CS
 - BR-N
 - BR-NE
-- BR-S&nbsp;</details>
+- BR-S
+> **Note**: The capacity parser for Brasil only get connected solar capacity. Distributed solar capacity needs to be added manually and can be found here ([ONS - Installed Capacity Dashboard](https://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao/capacidade_instalada.aspx)). See below for more instructions.
+
+Distributed solar generation is found on the [ONS - Installed Capacity Dashboard](https://www.ons.org.br/Paginas/resultados-da-operacao/historico-da-operacao/capacidade_instalada.aspx).
+
+- In the tab **Comparativo**, update the start and end dates.
+- Select **Geracao Distribuida** in the dropdown **Tipo de Usina** and collect the latest data point for each zone.
+- Add these values to solar capacity in the zone configuration.
+&nbsp;</details>
 
 The following other zones can also be updated automatically:
 
