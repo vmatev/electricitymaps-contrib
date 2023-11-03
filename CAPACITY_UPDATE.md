@@ -112,29 +112,11 @@ For some zones, we have developed capacity parsers which collect the data automa
 The update of capacity configurations can be done in the `contrib` repo using `poetry run capacity_parser`.
 
 The `capacity_parser` function has the following arguments:
-
-<table>
-  <thead>
-    <tr>
-      <th>Argument</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>--zone</td>
-      <td>A specific zone (e.g. DK-DK1)</td>
-    </tr>
-    <tr>
-      <td>--source</td>
-      <td>A group of zones. The capacity update will run for all the zones that have capacity from this data source. The groups of zones are: EIA, EMBER, ENTSOE, IRENA, ONS, OPENNEM, REE </td>
-    </tr>
-    <tr>
-      <td>--target_datetime</td>
-      <td> Date for the capacity data (e.g. "2023-01-01") </td>
-    </tr>
-  </tbody>
-</table>
+| Argument          | Description                                                                                                                                                                      |
+|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| --zone            | A specific zone (e.g. DK-DK1)                                                                                                                                                    |
+| --source          | A group of zones. The capacity update will run for all the zones that have capacity from this data source. The groups of zones are: EIA, EMBER, ENTSOE, IRENA, ONS, OPENNEM, REE |
+| --target_datetime | Date for the capacity data (e.g. "2023-01-01")                                                                                                                                   |
 
 Here is a list of examples:
 
@@ -309,7 +291,8 @@ The following zones can be updated with a parser:
 - ES-ML
 
 > **Note**: For the Canary Islands and the Baleares Islands, only total installed capacity is available.
-> &nbsp;</details> > &nbsp;<details><summary>ONS</summary>
+&nbsp;</details>
+&nbsp;<details><summary>ONS</summary>
 
 - BR-CS
 - BR-N
@@ -377,7 +360,9 @@ Consider Thermal to be oil generation.
 See data in the section _“La carte au format texte”_
 
 > **Note**: This source may not be updated in the future. Fossil capacity should not change or be mothballed but wind and solar capacity are likely to increase.
-> &nbsp;</details> > &nbsp;<details><summary>GT</summary>
+
+&nbsp;</details>
+&nbsp;<details><summary>GT</summary>
 
 **Main link**: https://ager.org.gt/wp-content/uploads/
 
@@ -389,67 +374,25 @@ See data in the section _“La carte au format texte”_
 
 **Mode mapping**:
 
-<table>
-  <thead>
-    <tr>
-      <th>Mode</th>
-      <th>Electricity Maps mode</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Hidroeléctrica</td>
-      <td>hydro</td>
-    </tr>
-    <tr>
-      <td>Hidroeléctrica GDR</td>
-      <td>hydro </td>
-    </tr>
-    <tr>
-      <td>Geotérmica</td>
-      <td>geothermal </td>
-    </tr>
-    <tr>
-      <td>Solar Fotovoltaica</td>
-      <td>solar </td>
-    </tr>
-    <tr>
-      <td>GDR Fotovoltaica</td>
-      <td>solar </td>
-    </tr>
-    <tr>
-      <td>Eólica</td>
-      <td>wind </td>
-    </tr>
-    <tr>
-      <td>Turbinas de Vapor</td>
-      <td>gas </td>
-    </tr>
-    <tr>
-      <td>Turbinas de Gas</td>
-      <td>gas </td>
-    </tr>
-    <tr>
-      <td>Turb. de Gas Natural</td>
-      <td>gas </td>
-    </tr>
-    <tr>
-      <td>Motores de CI</td>
-      <td>oil </td>
-    </tr>
-    <tr>
-      <td>Ing. Azucareros</td>
-      <td>biomass </td>
-    </tr>
-    <tr>
-      <td>GDR Térmico</td>
-      <td>unknown </td>
-    </tr>
-  </tbody>
-</table>
+|         Mode         | Electricity Maps mode |
+|:--------------------:|:---------------------:|
+| Hidroeléctrica       | hydro                 |
+| Hidroeléctrica GDR   | hydro                 |
+| Geotérmica           | geothermal            |
+| Solar Fotovoltaica   | solar                 |
+| GDR Fotovoltaica     | solar                 |
+| Eólica               | wind                  |
+| Turbinas de Vapor    | gas                   |
+| Turbinas de Gas      | gas                   |
+| Turb. de Gas Natural | gas                   |
+| Motores de CI        | oil                   |
+| Ing. Azucareros      | biomass               |
+| GDR Térmico          | unknown               |
 
 > **Note** GDR corresponds to the distributed generation capacity
-> &nbsp;</details> > &nbsp;<details><summary>HN</summary>
+
+&nbsp;</details>
+&nbsp;<details><summary>HN</summary>
 
 **Main link**: https://siehonduras.olade.org/WebForms/Reportes/VisorDocumentos.aspx?or=453&ss=7&v=1
 
@@ -458,45 +401,15 @@ See data in the section _“La carte au format texte”_
 **Data table**: Tabla 1 – Potencia eléctrica instalada
 
 **Mode mapping**:
-
-<table>
-  <thead>
-    <tr>
-      <th>Mode</th>
-      <th>Electricity Maps mode</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>FÓSIL</td>
-      <td>oil</td>
-    </tr>
-    <tr>
-      <td>HIDROELÉCTRICA</td>
-      <td>hydro </td>
-    </tr>
-    <tr>
-      <td>SOLAR</td>
-      <td>solar </td>
-    </tr>
-    <tr>
-      <td>EÓLICAS</td>
-      <td>wind </td>
-    </tr>
-    <tr>
-      <td>BIOMASA</td>
-      <td>biomass </td>
-    </tr>
-    <tr>
-      <td>CARBÓN</td>
-      <td>coal </td>
-    </tr>
-    <tr>
-      <td>GEOTÉRMICA</td>
-      <td>geothermal </td>
-    </tr>
-  </tbody>
-</table>
+|      Mode      | Electricity Maps mode |
+|:--------------:|:---------------------:|
+| FÓSIL          | oil                   |
+| HIDROELÉCTRICA | hydro                 |
+| SOLAR          | solar                 |
+| EÓLICAS        | wind                  |
+| BIOMASA        | biomass               |
+| CARBÓN         | coal                  |
+| GEOTÉRMICA     | geothermal            |
 &nbsp;</details>
 &nbsp;<details><summary>IN</summary>
 
@@ -538,6 +451,7 @@ For conventional power generation, data is published by the National Power Porta
 **Report name**: YYYY List of Existing Power Plants in Grid areas for Luzon, Visayas and Mindanao
 
 The report is published every six months and is available in pdf format. The report includes capacity data for all sub-zones for production and battery storage.
+
 &nbsp;</details>
 &nbsp;<details><summary>RU</summary>
 
@@ -549,13 +463,16 @@ The report is published every six months and is available in pdf format. The rep
 
 > **Note**:
 > Data has not been updated since 01-01-2020, it would be good to see if an other source exists.
-> &nbsp;</details> > &nbsp;<details><summary>SE</summary> > **Main link**: https://www.svk.se/om-oss/rapporter-och-remissvar/
+
+&nbsp;</details>
+&nbsp;<details><summary>SE</summary> > **Main link**: https://www.svk.se/om-oss/rapporter-och-remissvar/
 
 **Report name**: Kraftbalansen på den svenska elmarknaden, rapport YYYY
 
 The report is published annually and in pdf format.It should be updated at the end of May of the following year.
 
 **Table name**: Tabell 3. Installerad effekt [MW] per kraftslag
+
 &nbsp;</details>
 &nbsp;<details><summary>TW</summary>
 
@@ -595,7 +512,7 @@ Here are the following steps to build a capacity parser:
 - **Building the parser.** The parser should include a `fetch_production_capacity` function.
 
 ```{python}
-def fetch_production_capacity(zone_key: ZoneKey, target_datetime: datetime)-> Dict[str:Any]:
+def fetch_production_capacity(zone_key: ZoneKey, target_datetime: datetime, session:Session)-> Dict[str:Any]:
   capacity_dict = ....
   return capacity_dict
 ```
