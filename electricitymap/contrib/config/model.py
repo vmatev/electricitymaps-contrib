@@ -80,6 +80,7 @@ class Parsers(ParsersBaseModel):
     price: str | None
     production: str | None
     productionPerUnit: str | None
+    productionCapacity: str | None
 
 
 class Source(StrictBaseModel):
