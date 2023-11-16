@@ -108,11 +108,11 @@ The `capacity_parser` function has the following arguments:
 Here is a list of examples:
 
 ```{python}
-poetry run capacity_parser --zone DK-DK1 --target_datetime "2023-01-01"
+poetry run capacity_update --zone DK-DK1 --target_datetime "2023-01-01"
 ```
 
 ```{python}
-poetry run capacity_parser --source EIA --target_datetime "2023-06-01"
+poetry run capacity_update --source EIA --target_datetime "2023-06-01"
 ```
 
 The following zones can be updated with a parser are listed on our wiki page [Capacity update process](https://github.com/electricitymaps/electricitymaps-contrib/wiki/Capacity-update-process)
