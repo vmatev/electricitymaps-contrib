@@ -7,6 +7,7 @@ from datetime import datetime
 from logging import DEBUG, basicConfig, getLogger
 
 import click
+from requests import Session
 
 from electricitymap.contrib.config import ZONES_CONFIG
 from electricitymap.contrib.lib.types import ZoneKey
@@ -58,6 +59,7 @@ def capacity_update(
     assert zone is not None or source is not None
     assert not (zone is None and source is None)
 
+    session = Session()
     parsed_target_datetime = None
     if target_datetime is not None:
         parsed_target_datetime = datetime.fromisoformat(target_datetime)
@@ -73,7 +75,9 @@ def capacity_update(
             ),
             "fetch_production_capacity_for_all_zones",
         )
-        source_capacity = parser(target_datetime=parsed_target_datetime)
+        source_capacity = parser(
+            target_datetime=parsed_target_datetime, session=session
+        )
 
         for zone in source_capacity:
             if not source_capacity[zone]:
@@ -86,7 +90,9 @@ def capacity_update(
             raise ValueError(f"No capacity parser developed for {zone}")
         parser = CAPACITY_PARSERS[zone]
 
-        zone_capacity = parser(zone_key=zone, target_datetime=parsed_target_datetime)
+        zone_capacity = parser(
+            zone_key=zone, target_datetime=parsed_target_datetime, session=session
+        )
         if not zone_capacity:
             raise ValueError(f"No capacity data for {zone} in {target_datetime}")
         else:
