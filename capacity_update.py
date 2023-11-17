@@ -12,7 +12,8 @@ from requests import Session
 from electricitymap.contrib.config import ZONES_CONFIG
 from electricitymap.contrib.lib.types import ZoneKey
 from parsers.lib.parsers import PARSER_KEY_TO_DICT
-from scripts.utils import ROOT_PATH, run_shell_command, update_zone
+from scripts.update_capacity_configuration import update_zone_capacity_config
+from scripts.utils import ROOT_PATH, run_shell_command
 
 logger = getLogger(__name__)
 basicConfig(level=DEBUG, format="%(asctime)s %(levelname)-8s %(name)-30s %(message)s")
@@ -55,7 +56,6 @@ def capacity_update(
     >>> poetry run capacity_update --zone FR --target_datetime "2022-01-01"
     >>> poetry run capacity_update --source ENTSOE --target_datetime "2022-01-01"
     """
-    # TODO add source argument to update zone groups (can be source or zone)
     assert zone is not None or source is not None
     assert not (zone is None and source is None)
 
@@ -83,7 +83,7 @@ def capacity_update(
             if not source_capacity[zone]:
                 print(f"No capacity data for {zone} in {target_datetime}")
             else:
-                update_zone(zone, source_capacity[zone])
+                update_zone_capacity_config(zone, source_capacity[zone])
 
     elif zone is not None:
         if zone not in CAPACITY_PARSERS:
@@ -96,7 +96,7 @@ def capacity_update(
         if not zone_capacity:
             raise ValueError(f"No capacity data for {zone} in {target_datetime}")
         else:
-            update_zone(zone, zone_capacity)
+            update_zone_capacity_config(zone, zone_capacity)
 
     print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
