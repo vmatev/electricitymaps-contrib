@@ -49,8 +49,10 @@ def create_aggregated_config(zoneKey: str, timezone: str):
                             )
                             if current_capacity is None:
                                 current_capacity = 0
+                            breakpoint()
                             zone.capacity.__setattr__(
-                                mapped_key, current_capacity + capacity
+                                mapped_key,
+                                current_capacity["value"] + capacity["value"],
                             )
 
     zoneDict = deepcopy(zone.__dict__)
@@ -67,9 +69,9 @@ def create_aggregated_config(zoneKey: str, timezone: str):
     zoneDict["capacity"]["battery storage"] = zoneDict["capacity"].pop(
         "battery_storage"
     )
-    for key, value in zoneDict["capacity"].items():
-        if value is not None:
-            zoneDict["capacity"][key] = round(value, 1)
+    # for key, value in zoneDict["capacity"].items():
+    #     if value is not None:
+    #         zoneDict["capacity"][key] = round(value, 1)
 
     with open(f"config/zones/{zoneKey}.yaml", "w") as file:
         yaml.safe_dump(zoneDict, file)

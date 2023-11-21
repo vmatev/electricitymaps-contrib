@@ -9,9 +9,10 @@ from logging import DEBUG, basicConfig, getLogger
 import click
 from requests import Session
 
-from electricitymap.contrib.config import ZONES_CONFIG
+from electricitymap.contrib.config import ZONE_PARENT, ZONES_CONFIG
 from electricitymap.contrib.lib.types import ZoneKey
 from parsers.lib.parsers import PARSER_KEY_TO_DICT
+from scripts.create_aggregated_zone_config import create_aggregated_config
 from scripts.update_capacity_configuration import update_zone_capacity_config
 from scripts.utils import ROOT_PATH, run_shell_command
 
@@ -97,6 +98,11 @@ def capacity_update(
             raise ValueError(f"No capacity data for {zone} in {target_datetime}")
         else:
             update_zone_capacity_config(zone, zone_capacity)
+    breakpoint()
+    if update_aggregate:
+        zone_parent = ZONE_PARENT[zone]
+        zone_parent_timezone = ZONES_CONFIG[zone_parent]["timezone"]
+        create_aggregated_config(zoneKey=zone_parent, timezone=zone_parent_timezone)
 
     print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
