@@ -6,10 +6,54 @@ bounding_box:
   - - 46.6379081561
     - 43.553104153
 capacity:
-  gas: 1189
-  hydro: 3552
-  nuclear: 0
-  wind: 29
+  battery storage:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  coal:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  gas:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 1189
+  geothermal:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 3552
+  hydro storage:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 0
+  oil:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  solar:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  unknown:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 29
 contributors:
   - alixunderplatz
   - kruschk

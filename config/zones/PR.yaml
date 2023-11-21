@@ -4,18 +4,54 @@ bounding_box:
   - - -64.74461829299992
     - 19.022772528000033
 capacity:
-  battery storage: 30.5
-  biomass: 4.8
-  coal: 510
-  gas: 1421.6
-  geothermal: 0
-  hydro: 98.1
-  hydro storage: 0
-  nuclear: 0
-  oil: 4047.1
-  solar: 157.7
-  unknown: 0
-  wind: 125.2
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: 30.5
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 4.8
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 510
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 1421.6
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 98.1
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 4047.1
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 157.7
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 125.2
 contributors:
   - q--
   - systemcatch
@@ -129,7 +165,8 @@ emissionFactors:
         value: 604.8374514356746
     unknown:
       _comment: 'Source: https://indicadores.pr/dataset/generacion-consumo-costo-ingresos-y-clientes-del-sistema-electrico-de-puerto-rico/resource/fdad4f42-a4be-48bb-9478-a8fb75c000c6'
-      source: assumes 12% hydro, 57% solar, 31% wind based on average renewable generation October 2019-September 2020
+      source: assumes 12% hydro, 57% solar, 31% wind based on average renewable generation
+        October 2019-September 2020
       value: 31.94
 fallbackZoneMixes:
   powerOriginRatios:

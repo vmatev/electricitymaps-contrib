@@ -1,11 +1,11 @@
 from collections.abc import Callable
 from datetime import date, datetime
+from typing import Any
 
 from pydantic import (
     BaseModel,
     Field,
     NonNegativeFloat,
-    NonNegativeInt,
     PositiveInt,
     confloat,
     root_validator,
@@ -44,18 +44,20 @@ class StrictBaseModelWithAlias(BaseModel):
 
 class Capacity(StrictBaseModel):
     # TODO: if zone.json used underscores for keys we didn't need the Field()
-    battery_storage: NonNegativeInt | None = Field(None, alias="battery storage")
-    biomass: NonNegativeInt | None
-    coal: NonNegativeInt | None
-    gas: NonNegativeInt | None
-    geothermal: NonNegativeInt | None
-    hydro_storage: NonNegativeInt | None = Field(None, alias="hydro storage")
-    hydro: NonNegativeInt | None
-    nuclear: NonNegativeInt | None
-    oil: NonNegativeInt | None
-    solar: NonNegativeInt | None
-    unknown: NonNegativeInt | None
-    wind: NonNegativeInt | None
+    battery_storage: dict[str, Any] | None = Field(None, alias="battery storage")
+    biomass: dict[str, Any] | None
+    coal: dict[str, Any] | None
+    gas: dict[str, Any] | None
+    geothermal: dict[str, Any] | None
+    hydro_storage: dict[str, Any] | list[dict[str, Any]] | None = Field(
+        None, alias="hydro storage"
+    )
+    hydro: dict[str, Any] | None
+    nuclear: dict[str, Any] | None
+    oil: dict[str, Any] | None
+    solar: dict[str, Any] | None
+    unknown: dict[str, Any] | None
+    wind: dict[str, Any] | None
 
 
 class ParsersBaseModel(StrictBaseModel):

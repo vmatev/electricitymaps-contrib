@@ -4,14 +4,54 @@ bounding_box:
   - - 127.08266582665826
     - 10.957111072508837
 capacity:
-  battery storage: 49
-  biomass: 79
-  coal: 2268
-  gas: 0
-  hydro: 1191
-  nuclear: 0
-  oil: 833
-  solar: 84
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: 49
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 79
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 2268
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 1191
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 833
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 84
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: null
 contributors:
   - VIKTORVAV99
   - jarek

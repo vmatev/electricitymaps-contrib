@@ -4,14 +4,54 @@ bounding_box:
   - - 79.06898237493664
     - 18.96081146897413
 capacity:
-  biomass: 1888.3
-  coal: 9480
-  gas: 0
-  hydro: 3689.2
-  nuclear: 880
-  oil: 25.2
-  solar: 7409.39
-  wind: 4938.6
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 1888.3
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 9480
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 3689.2
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: 880
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 25.2
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 7409.39
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 4938.6
 contributors:
   - hectorespert
   - gopikrishna1793
@@ -84,7 +124,8 @@ emissionFactors:
         value: 459.2042079468457
     unknown:
       _comment: calculated 20% nuclear, 80% thermal (coal)
-      source: Souther Regional Load Dispatch Center Allocation Limits 2018-2019; SRLDC 2018-2019 derived calculation for Karnataka
+      source: Souther Regional Load Dispatch Center Allocation Limits 2018-2019; SRLDC
+        2018-2019 derived calculation for Karnataka
       value: 658.4
 fallbackZoneMixes:
   powerOriginRatios:
@@ -166,9 +207,9 @@ fallbackZoneMixes:
 parsers:
   consumption: IN_KA.fetch_consumption
   production: IN_KA.fetch_production
-timezone: Asia/Kolkata
 sources:
-  Souther Regional Load Dispatch Center Allocation Limits 2018-2019:
-    link: http://srldc.org/2018-19srallocation.aspx
   SRLDC 2018-2019 derived calculation for Karnataka:
     link: https://github.com/electricitymaps/electricitymaps-contrib/issues/1867
+  Souther Regional Load Dispatch Center Allocation Limits 2018-2019:
+    link: http://srldc.org/2018-19srallocation.aspx
+timezone: Asia/Kolkata

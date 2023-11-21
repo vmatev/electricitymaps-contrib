@@ -4,11 +4,54 @@ bounding_box:
   - - -51.595232
     - 5.78601
 capacity:
-  biomass: 1.976
-  gas: 80
-  hydro: 119.13
-  oil: 108
-  solar: 44.879
+  battery storage:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 1.976
+  coal:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  gas:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 80
+  geothermal:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 119.13
+  hydro storage:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 108
+  solar:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 44.879
+  unknown:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
 contributors:
   - PETILLON-Sebastien
   - VIKTORVAV99

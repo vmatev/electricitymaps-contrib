@@ -3,29 +3,69 @@ bounding_box:
     - 23.756984768000052
   - - 131.82789147200003
     - 28.368963934000078
+capacity:
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 49
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 1629
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 326
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 189.78
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 28
 contributors:
   - tmslaine
   - lorrieq
   - PPsyrius
-capacity:
-  biomass: 49
-  geothermal: 0
-  coal: 1629
-  gas: 326
-  hydro storage: 0
-  nuclear: 0
-  oil: 189.78
-  wind: 28
 emissionFactors:
   lifecycle:
     unknown:
-      source: 'Enerdata 2022 Japanese National Average'
+      source: Enerdata 2022 Japanese National Average
       value: 462
 parsers:
   consumptionForecast: JP.fetch_consumption_forecast
   price: JP.fetch_price
   production: JP.fetch_production
-timezone: Asia/Tokyo
 sources:
   Enerdata 2022 Japanese National Average:
     link: https://www.climate-transparency.org/wp-content/uploads/2022/10/CT2022-Japan-Web.pdf
+timezone: Asia/Tokyo

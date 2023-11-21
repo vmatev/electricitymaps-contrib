@@ -4,11 +4,54 @@ bounding_box:
   - - -113.53745235883926
     - 60.50005890629359
 capacity:
-  biomass: 838
-  gas: 507
-  hydro: 15898
-  solar: 1
-  wind: 704
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 838
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 507
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 15898
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 1
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 704
 contributors:
   - daveachuk
 fallbackZoneMixes:

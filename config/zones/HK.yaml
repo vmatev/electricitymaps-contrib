@@ -6,11 +6,58 @@ bounding_box:
   - - 114.90129642000011
     - 23.06394603200009
 capacity:
-  coal: 2875
-  gas: 3225
-  oil: 210
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 2875
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 3225
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 210
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: null
 contributors:
   - nessie2013
+disclaimer: Real-time consumption and generation mix data is not available and is
+  fully estimated.
 emissionFactors:
   direct:
     battery discharge:
@@ -210,5 +257,4 @@ fallbackZoneMixes:
         solar: 0.0
         unknown: 0.0
         wind: 0.0
-disclaimer: Real-time consumption and generation mix data is not available and is fully estimated.
 timezone: Asia/Hong_Kong

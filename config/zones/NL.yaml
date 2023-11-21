@@ -4,16 +4,54 @@ bounding_box:
   - - 7.09205325687
     - 53.5104033474
 capacity:
-  biomass: 1201
-  coal: 4006
-  gas: 18351
-  geothermal: 0
-  hydro: 38
-  hydro storage: 0
-  nuclear: 486
-  oil: 0
-  solar: 19142
-  wind: 8831
+  battery storage:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 1201
+  coal:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 4006
+  gas:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 18351
+  geothermal:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 0
+  hydro:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 38
+  hydro storage:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 0
+  nuclear:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 486
+  oil:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 0
+  solar:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 19142
+  unknown:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: entsoe.eu
+    value: 8831
 contributors:
   - corradio
   - PaulCornelissen

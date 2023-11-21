@@ -4,18 +4,57 @@ bounding_box:
   - - 106.633301
     - 33.486435
 capacity:
-  biomass: 15.8
-  coal: 750.0
-  gas: 1664.95
-  hydro: 2322.21
-  nuclear: 0
-  oil: 36
-  solar: 202.99
-  unknown: 0
-  wind: 0
-timezone: Asia/Kolkata
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 15.8
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 750.0
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 1664.95
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 2322.21
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 36
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 202.99
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
 contributors:
   - unitrium
 parsers:
   consumption: IN.fetch_consumption
   production: IN.fetch_production
+timezone: Asia/Kolkata

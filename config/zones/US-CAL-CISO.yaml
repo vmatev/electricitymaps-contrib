@@ -4,18 +4,54 @@ bounding_box:
   - - -113.631212
     - 41.965851
 capacity:
-  battery storage: 4941.3
-  biomass: 1147.1
-  coal: 62.5
-  gas: 33062.9
-  geothermal: 2128.5
-  hydro: 6705.6
-  hydro storage: 2119.6
-  nuclear: 2323
-  oil: 391.5
-  solar: 18162.4
-  unknown: 66.7
-  wind: 6141.5
+  battery storage:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 4941.3
+  biomass:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 1147.1
+  coal:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 62.5
+  gas:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 33062.9
+  geothermal:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 2128.5
+  hydro:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 6705.6
+  hydro storage:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 2119.6
+  nuclear:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 2323
+  oil:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 391.5
+  solar:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 18162.4
+  unknown:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 66.7
+  wind:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 6141.5
 comment: California Independent System Operator
 contributors:
   - systemcatch

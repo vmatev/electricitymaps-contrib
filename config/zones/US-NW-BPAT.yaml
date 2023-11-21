@@ -4,18 +4,54 @@ bounding_box:
   - - -105.50971
     - 49.50244
 capacity:
-  battery storage: 34
-  biomass: 369.4
-  coal: 0
-  gas: 2283.7
-  geothermal: 18
-  hydro: 21708.1
-  hydro storage: 314
-  nuclear: 1200
-  oil: 0
-  solar: 137.9
-  unknown: 0
-  wind: 5314.8
+  battery storage:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 34
+  biomass:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 369.4
+  coal:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 0
+  gas:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 2283.7
+  geothermal:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 18
+  hydro:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 21708.1
+  hydro storage:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 314
+  nuclear:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 1200
+  oil:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 0
+  solar:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 137.9
+  unknown:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 0
+  wind:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 5314.8
 comment: Bonneville Power Administration
 contributors:
   - systemcatch

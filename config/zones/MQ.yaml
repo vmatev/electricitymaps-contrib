@@ -4,17 +4,58 @@ bounding_box:
   - - -60.732382
     - 14.888562
 capacity:
-  biomass: 15.082
-  gas: 129
-  geothermal: 0
-  hydro: 0
-  oil: 292
-  solar: 53.97
-  wind: 1.1
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 15.082
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 129
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 292
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 53.97
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 1.1
 contributors:
   - PETILLON-Sebastien
   - VIKTORVAV99
 parsers:
-  production: FR_O.fetch_production
   price: FR_O.fetch_price
+  production: FR_O.fetch_production
 timezone: Europe/Paris
