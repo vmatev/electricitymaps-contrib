@@ -98,11 +98,11 @@ def capacity_update(
             raise ValueError(f"No capacity data for {zone} in {target_datetime}")
         else:
             update_zone_capacity_config(zone, zone_capacity)
-    breakpoint()
+
     if update_aggregate:
         zone_parent = ZONE_PARENT[zone]
         zone_parent_timezone = ZONES_CONFIG[zone_parent]["timezone"]
-        create_aggregated_config(zoneKey=zone_parent, timezone=zone_parent_timezone)
+        pass
 
     print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)
