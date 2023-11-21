@@ -1,30 +1,65 @@
-contributors:
-  - alixunderplatz
-  - MuffinCompiler
-  - VIKTORVAV99
-
-parsers:
-  consumption: VN.fetch_consumption
-
 bounding_box:
   - - 135.84
     - 33.82
   - - 138.72
     - 37.17
-
 capacity:
-  biomass: 356
-  coal: 25820
-  gas: 7398
-  hydro: 22345
-  oil: 1579
-  solar: 16567
-  unknown: 619
-  wind: 4667
-
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 356
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 25820
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 7398
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 22345
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 1579
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 16567
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: 619
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 4667
+contributors:
+  - alixunderplatz
+  - MuffinCompiler
+  - VIKTORVAV99
+parsers:
+  consumption: VN.fetch_consumption
 subZoneNames:
   - VN-N
   - VN-C
   - VN-S
-
 timezone: Asia/Ho_Chi_Minh

@@ -4,14 +4,54 @@ bounding_box:
   - - 168.76099694100003
     - -46.18303801899992
 capacity:
-  biomass: 0
-  coal: 0
-  gas: 0
-  hydro: 0
-  nuclear: 0
-  oil: 1.096
-  solar: 0
-  wind: 0
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 1.096
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
 contributors:
   - madsnedergaard
 timezone: Pacific/Auckland

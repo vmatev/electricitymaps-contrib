@@ -4,10 +4,54 @@ bounding_box:
   - - 104.79468834700015
     - 7.207963766000191
 capacity:
-  coal: 12054
-  gas: 10114
-  hydro: 2160
-  solar: 729
+  battery storage:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: null
+  coal:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: 12054
+  gas:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: 10114
+  geothermal:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: 2160
+  hydro storage:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: null
+  solar:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: 729
+  unknown:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: gso.org.my
+    value: null
 contributors:
   - kruschk
   - systemcatch

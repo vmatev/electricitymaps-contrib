@@ -4,8 +4,54 @@ bounding_box:
   - - 129.50011656788791
     - -13.223565362999949
 capacity:
-  solar: 1884
-  wind: 491
+  battery storage:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  coal:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  gas:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  geothermal:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  hydro storage:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  solar:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: 1884
+  unknown:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: opennem.org.au
+    value: 491
 contributors:
   - jarek
   - corradio

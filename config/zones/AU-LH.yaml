@@ -4,7 +4,52 @@ bounding_box:
   - - 159.60462909730177
     - -31.011655274959526
 capacity:
-  battery storage: 1
-  gas: 0.84
-  solar: 1
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: 1
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 0.84
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 1
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: null
 timezone: Lord_Howe

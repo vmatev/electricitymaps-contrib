@@ -4,12 +4,54 @@ bounding_box:
   - - -83.147219001
     - 15.0162671981
 capacity:
-  biomass: 218.2
-  geothermal: 153.24
-  hydro: 157.42
-  oil: 888.31
-  solar: 16.36
-  wind: 186.2
+  battery storage:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 218.2
+  coal:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  gas:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  geothermal:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 153.24
+  hydro:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 157.42
+  hydro storage:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 888.31
+  solar:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 16.36
+  unknown:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: IRENA.org
+    value: 186.2
 contributors:
   - corradio
   - systemcatch

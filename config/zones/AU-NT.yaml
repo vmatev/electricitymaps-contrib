@@ -4,18 +4,64 @@ bounding_box:
   - - 138.50018768629417
     - -10.468357028999876
 capacity:
-  biomass: 1.1
-  gas: 471.4
-  solar: 158
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 1.1
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 471.4
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 158
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: null
 contributors:
   - unitrium
 delays:
   consumption: 30
   price: 30
   production: 30
+disclaimer: The Northern Territory power grid is not connected to the (Australian)
+  National Electricity Market or Western Australia's grid.
 parsers:
   consumption: NTESMO.fetch_consumption
   price: NTESMO.fetch_price
   production: NTESMO.fetch_production_mix
-disclaimer: The Northern Territory power grid is not connected to the (Australian) National Electricity Market or Western Australia's grid.
 timezone: Australia/Darwin

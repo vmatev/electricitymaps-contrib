@@ -4,18 +4,54 @@ bounding_box:
   - - -81.14647784
     - 38.101846827
 capacity:
-  battery storage: 1
-  biomass: 288.9
-  coal: 8593.9
-  gas: 17502.6
-  geothermal: 0
-  hydro: 4871.8
-  hydro storage: 1808.6
-  nuclear: 8548.3
-  oil: 74.6
-  solar: 679.8
-  unknown: 0
-  wind: 28.8
+  battery storage:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 1
+  biomass:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 288.9
+  coal:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 8593.9
+  gas:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 17502.6
+  geothermal:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 0
+  hydro:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 4871.8
+  hydro storage:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 1808.6
+  nuclear:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 8548.3
+  oil:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 74.6
+  solar:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 679.8
+  unknown:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 0
+  wind:
+    datetime: '2023-01-01'
+    source: EIA.gov
+    value: 28.8
 comment: Tennessee Valley Authority
 contributors:
   - systemcatch

@@ -4,11 +4,54 @@ bounding_box:
   - - -59.32226030077226
     - -7.500493258457112
 capacity:
-  hydro: 40384
-  nuclear: 1990
-  solar: 14133
-  unknown: 22800
-  wind: 28
+  battery storage:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: null
+  coal:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: null
+  gas:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: null
+  geothermal:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: 40384
+  hydro storage:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: 1990
+  oil:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: null
+  solar:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: 14133
+  unknown:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: 22800
+  wind:
+    datetime: '2023-01-01'
+    source: ons.org.br
+    value: 28
 contributors:
   - alexanmtz
   - corradio

@@ -4,22 +4,61 @@ bounding_box:
   - - 138.72
     - 37.17
 capacity:
-  biomass: 352.6
-  geothermal: 2
-  coal: 5170
-  gas: 14136
-  hydro: 2180
-  hydro storage: 3320
-  nuclear: 3617
-  oil: 2275
-  solar: 550
-  wind: 210
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 352.6
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 5170
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 14136
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: 2
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 2180
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: 3320
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: 3617
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 2275
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: 550
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 210
 contributors:
   - tmslaine
   - lorrieq
   - pierresegonne
   - wobniarin
-disclaimer: The data provided for solar power production is suspected to be too high (source; Chubu Electric Power Co.,Inc.).
+disclaimer: The data provided for solar power production is suspected to be too high
+  (source; Chubu Electric Power Co.,Inc.).
 emissionFactors:
   lifecycle:
     unknown:

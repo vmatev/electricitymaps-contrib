@@ -3,32 +3,74 @@ bounding_box:
     - 35.39
   - - 137.75
     - 37.9
+capacity:
+  battery storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: null
+    value: 700
+  coal:
+    datetime: '2023-01-01'
+    source: null
+    value: 2900
+  gas:
+    datetime: '2023-01-01'
+    source: null
+    value: 1194.7
+  geothermal:
+    datetime: '2023-01-01'
+    source: null
+    value: 0
+  hydro:
+    datetime: '2023-01-01'
+    source: null
+    value: 1934
+  hydro storage:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: null
+    value: 1746
+  oil:
+    datetime: '2023-01-01'
+    source: null
+    value: 1750
+  solar:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  unknown:
+    datetime: '2023-01-01'
+    source: null
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: null
+    value: 229.6
 contributors:
   - tmslaine
   - lorrieq
   - pierresegonne
   - wobniarin
   - PPsyrius
-capacity:
-  biomass: 700
-  geothermal: 0
-  coal: 2900
-  gas: 1194.7
-  hydro: 1934
-  nuclear: 1746
-  oil: 1750
-  wind: 229.6
-disclaimer: The data provider (Hokuriku Electric Power Co.,Inc.) provides live data only for solar and unknown. We are working on improving the data quality for this zone.
+disclaimer: The data provider (Hokuriku Electric Power Co.,Inc.) provides live data
+  only for solar and unknown. We are working on improving the data quality for this
+  zone.
 emissionFactors:
   lifecycle:
     unknown:
-      source: 'Enerdata 2022 Japanese National Average'
+      source: Enerdata 2022 Japanese National Average
       value: 462
 parsers:
   consumptionForecast: JP.fetch_consumption_forecast
   price: JP.fetch_price
   production: JP.fetch_production
-timezone: Asia/Tokyo
 sources:
   Enerdata 2022 Japanese National Average:
     link: https://www.climate-transparency.org/wp-content/uploads/2022/10/CT2022-Japan-Web.pdf
+timezone: Asia/Tokyo

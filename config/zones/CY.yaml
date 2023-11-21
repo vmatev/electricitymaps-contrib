@@ -4,16 +4,54 @@ bounding_box:
   - - 34.0048808123
     - 35.1731247015
 capacity:
-  biomass: 13
-  coal: 0
-  gas: 0
-  geothermal: 0
-  hydro: 0
-  hydro storage: 0
-  nuclear: 0
-  oil: 1478
-  solar: 316
-  wind: 158
+  battery storage:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 13
+  coal:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 0
+  gas:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 0
+  geothermal:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 0
+  hydro:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 0
+  hydro storage:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 0
+  nuclear:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 0
+  oil:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 1478
+  solar:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 316
+  unknown:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 158
 contributors:
   - ultibo
   - veqtrus

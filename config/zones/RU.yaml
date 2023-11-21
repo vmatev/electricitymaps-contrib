@@ -1,12 +1,52 @@
 capacity:
-  biomass: 0
-  coal: 44868
-  gas: 115374
-  hydro: 48085
-  nuclear: 27929
-  oil: 1600
-  solar: 75
-  wind: 10
+  battery storage:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  biomass:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 0
+  coal:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 44868
+  gas:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 115374
+  geothermal:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  hydro:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 48085
+  hydro storage:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  nuclear:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 27929
+  oil:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 1600
+  solar:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 75
+  unknown:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: null
+  wind:
+    datetime: '2023-01-01'
+    source: Ember, Yearly electricity data
+    value: 10
 contributors:
   - denplis
   - systemcatch
