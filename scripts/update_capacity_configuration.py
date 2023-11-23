@@ -135,7 +135,9 @@ def update_aggregated_capacity_config(parent_zone: ZoneKey) -> dict[str, Any]:
                 )
                 parent_capacity_config[mode]["value"] = aggregated_capacity_value
                 parent_capacity_config[mode]["datetime"] = list(datetime_values)[0]
-                parent_capacity_config[mode]["source"] = ", ".join([elem for elem in sources if elem is not None])
+                parent_capacity_config[mode]["source"] = ", ".join(
+                    [elem for elem in sources if elem is not None]
+                )
         elif check_capacity_config_type(mode_capacity_configs, list):
-
+            pass
             # extract values for the same datetime
