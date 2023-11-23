@@ -12,8 +12,10 @@ from requests import Session
 from electricitymap.contrib.config import ZONE_PARENT, ZONES_CONFIG
 from electricitymap.contrib.lib.types import ZoneKey
 from parsers.lib.parsers import PARSER_KEY_TO_DICT
-from scripts.create_aggregated_zone_config import create_aggregated_config
-from scripts.update_capacity_configuration import update_zone_capacity_config
+from scripts.update_capacity_configuration import (
+    update_aggregated_capacity_config,
+    update_zone_capacity_config,
+)
 from scripts.utils import ROOT_PATH, run_shell_command
 
 logger = getLogger(__name__)
@@ -40,7 +42,7 @@ for zone_id, zone_config in ZONES_CONFIG.items():
 @click.option("--zone", default=None)
 @click.option("--source", default=None)
 @click.option("--target_datetime")
-@click.option("--update_aggregate", default=False, show_default=True)
+@click.option("--update_aggregate", default=False)
 def capacity_update(
     zone: ZoneKey,
     source: str,
@@ -99,10 +101,9 @@ def capacity_update(
         else:
             update_zone_capacity_config(zone, zone_capacity)
 
-    if update_aggregate:
+    if eval(update_aggregate):
         zone_parent = ZONE_PARENT[zone]
-        zone_parent_timezone = ZONES_CONFIG[zone_parent]["timezone"]
-        pass
+        update_aggregated_capacity_config(zone_parent)
 
     print(f"Running prettier...")
     run_shell_command(f"web/node_modules/.bin/prettier --write .", cwd=ROOT_PATH)

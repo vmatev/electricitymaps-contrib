@@ -1,4 +1,5 @@
 from copy import deepcopy
+from logging import INFO, basicConfig, getLogger
 from typing import Any
 
 from electricitymap.contrib.config import CONFIG_DIR, ZONE_PARENT
@@ -7,11 +8,19 @@ from electricitymap.contrib.config.reading import read_zones_config
 from electricitymap.contrib.lib.types import ZoneKey
 from scripts.utils import write_zone_config
 
+logger = getLogger(__name__)
+basicConfig(level=INFO)
 ZONES_CONFIG = read_zones_config(CONFIG_DIR)
 CAPACITY_MODES = PRODUCTION_MODES + [f"{mode} storage" for mode in STORAGE_MODES]
 
 
+def sort_config_keys(config: dict[str, Any]) -> dict[str, Any]:
+    """Sort the keys of the config dict"""
+    return {k: config[k] for k in sorted(config)}
+
+
 def update_zone_capacity_config(zone_key: ZoneKey, data: dict) -> None:
+    """Update the capacity config for a zone"""
     if zone_key not in ZONES_CONFIG:
         raise ValueError(f"Zone {zone_key} does not exist in the zones config")
 
@@ -22,22 +31,19 @@ def update_zone_capacity_config(zone_key: ZoneKey, data: dict) -> None:
         if all(isinstance(capacity[m], float | int) for m in capacity.keys()):
             capacity = data
         else:
-            capacity = update_capacity_config(capacity, data)
+            capacity = get_zone_capacity_config(capacity, data)
     else:
         capacity = data
 
     _new_zone_config["capacity"] = capacity
 
     # sort keys
-    _new_zone_config["capacity"] = {
-        k: _new_zone_config["capacity"][k] for k in sorted(_new_zone_config["capacity"])
-    }
+    _new_zone_config["capacity"] = sort_config_keys(_new_zone_config["capacity"])
 
-    ZONES_CONFIG[zone_key] = _new_zone_config
     write_zone_config(zone_key, _new_zone_config)
 
 
-def update_capacity_config(
+def get_zone_capacity_config(
     capacity_config: dict[str, Any], data: dict[str, Any]
 ) -> dict[str, Any]:
     """Update capacity config depending on the type of the existing capacity data.
@@ -51,11 +57,11 @@ def update_capacity_config(
         if isinstance(capacity_config[mode], float | int):
             updated_capacity_config[mode] = data[mode]
         elif isinstance(capacity_config[mode], dict):
-            updated_capacity_config[mode] = update_capacity_dict(
+            updated_capacity_config[mode] = get_zone_capacity_dict(
                 mode, capacity_config, data
             )
         elif isinstance(capacity_config[mode], list):
-            updated_capacity_config[mode] = update_capacity_list(
+            updated_capacity_config[mode] = get_zone_capacity_list(
                 mode, capacity_config, data
             )
 
@@ -65,9 +71,10 @@ def update_capacity_config(
     return updated_capacity_config
 
 
-def update_capacity_dict(
+def get_zone_capacity_dict(
     mode: str, capacity_config: dict[str, Any], data: [str, Any]
 ) -> dict[str, Any]:
+    """Generate the updated capacity config for a zone if the capacity config is a dict"""
     existing_capacity = capacity_config[mode]
     if existing_capacity["datetime"] != data[mode]["datetime"]:
         return [existing_capacity] + [data[mode]]
@@ -75,9 +82,10 @@ def update_capacity_dict(
         return data[mode]
 
 
-def update_capacity_list(
+def get_zone_capacity_list(
     mode: str, capacity_config: dict[str, Any], data: [str, Any]
-) -> dict[str, Any]:
+) -> list[dict[str, Any]]:
+    """Generate the updated capacity config for a zone if the capacity config is a list"""
     if data[mode]["datetime"] not in [d["datetime"] for d in capacity_config[mode]]:
         return capacity_config[mode] + [data[mode]]
     else:
@@ -97,7 +105,10 @@ def check_capacity_config_type(capacity_config: list, config_type: type) -> None
     )
 
 
-def update_aggregated_capacity_config(parent_zone: ZoneKey) -> dict[str, Any]:
+def get_aggregated_capacity_config(
+    parent_zone: ZoneKey,
+) -> dict[str, Any] | None:
+    """Generate the aggregated capacity config for a parent zone"""
     zone_keys = [zone for zone in ZONE_PARENT if ZONE_PARENT[zone] == parent_zone]
     parent_capacity_config = ZONES_CONFIG[parent_zone]["capacity"]
 
@@ -107,37 +118,103 @@ def update_aggregated_capacity_config(parent_zone: ZoneKey) -> dict[str, Any]:
         mode_capacity_configs = [
             capacity_config[mode] for capacity_config in all_capacity_configs
         ]
+
         if not check_capacity_config_type(
-            mode_capacity_configs, mode_capacity_configs[0]
+            mode_capacity_configs, type(mode_capacity_configs[0])
         ):
-            raise ValueError(
+            logger.warning(
                 f"{parent_zone} capacity could not be updated because all capacity configs must have the same type"
             )
-        datetime_values = set(
-            [capacity_config["datetime"] for capacity_config in mode_capacity_configs]
-        )
-        sources = set(
-            [capacity_config["source"] for capacity_config in mode_capacity_configs]
-        )
+            return None
         if check_capacity_config_type(mode_capacity_configs, dict):
-            if len(datetime_values) != 1:
-                raise ValueError(
-                    f"{parent_zone} capacity could not be updated because all capacity configs must have the same datetime values"
-                )
-            else:
-                aggregated_capacity_value = sum(
-                    [
-                        0
-                        if capacity_config["value"] is None
-                        else capacity_config["value"]
-                        for capacity_config in mode_capacity_configs
-                    ]
-                )
-                parent_capacity_config[mode]["value"] = aggregated_capacity_value
-                parent_capacity_config[mode]["datetime"] = list(datetime_values)[0]
-                parent_capacity_config[mode]["source"] = ", ".join(
-                    [elem for elem in sources if elem is not None]
-                )
+            parent_capacity_config[mode] = get_aggregated_capacity_config_dict(
+                mode_capacity_configs, parent_zone
+            )
         elif check_capacity_config_type(mode_capacity_configs, list):
-            pass
-            # extract values for the same datetime
+            parent_capacity_config[mode] = get_aggregated_capacity_config_list(
+                mode_capacity_configs, parent_zone
+            )
+    return parent_capacity_config
+
+
+def get_aggregated_capacity_config_dict(
+    capacity_config: list[dict[str, Any]], parent_zone: ZoneKey
+) -> dict[str, Any] | None:
+    """Generate aggregated capacity config for a parent zone if the capacity config of the subzones are a dict"""
+    datetime_values = set(
+        [capacity_config["datetime"] for capacity_config in capacity_config]
+    )
+    sources = set([capacity_config["source"] for capacity_config in capacity_config])
+    if len(datetime_values) != 1:
+        logger.warning(
+            f"{parent_zone} capacity could not be updated because all capacity configs must have the same datetime values"
+        )
+        return None
+    else:
+        updated_capacity = {}
+        aggregated_value = compute_aggregated_value(capacity_config)
+        updated_capacity["datetime"] = list(datetime_values)[0]
+        updated_capacity["value"] = aggregated_value
+        updated_capacity["source"] = ", ".join(
+            [elem for elem in sources if elem is not None]
+        )
+        return sort_config_keys(updated_capacity)
+
+
+def compute_aggregated_value(capacity_config: list[dict[str, Any]]) -> float | None:
+    """Compute the aggregated capacity value as the sum of all subzone capacities"""
+    if all(capacity_config["value"] is None for capacity_config in capacity_config):
+        aggregated_value = None
+    else:
+        aggregated_value = sum(
+            [
+                0 if capacity_config["value"] is None else capacity_config["value"]
+                for capacity_config in capacity_config
+            ]
+        )
+    return aggregated_value
+
+
+def get_aggregated_capacity_config_list(
+    capacity_config: list[Any], parent_zone: ZoneKey
+) -> list[dict[str, Any]] | None:
+    """Generate the aggregated capacity config for a parent zone if the capacity config of the subzones are a list"""
+    flat_capacity_config = [item for sublist in capacity_config for item in sublist]
+    datetime_values = set([item["datetime"] for item in flat_capacity_config])
+    updated_aggregated_capacity_config = []
+    for dt in datetime_values:
+        datetime_capacity_config = [
+            item for item in flat_capacity_config if item["datetime"] == dt
+        ]
+        if len(datetime_capacity_config) == len(
+            ZONES_CONFIG[ZoneKey(parent_zone)]["subZoneNames"]
+        ):
+            updated_aggregated_capacity_config.append(
+                get_aggregated_capacity_config_dict(
+                    datetime_capacity_config, parent_zone
+                )
+            )
+        else:
+            logger.warning(
+                f"{parent_zone} capacity could not be updated for {dt} because not all capacities are available"
+            )
+    return updated_aggregated_capacity_config
+
+
+def update_aggregated_capacity_config(parent_zone: ZoneKey) -> None:
+    """Update the aggregated capacity config for a parent zone"""
+    if parent_zone not in ZONES_CONFIG:
+        raise ValueError(f"Zone {parent_zone} does not exist in the zones config")
+
+    _new_zone_config = deepcopy(ZONES_CONFIG[parent_zone])
+    _new_zone_config["capacity"] = get_aggregated_capacity_config(parent_zone)
+
+    if _new_zone_config["capacity"] is not None:
+        # sort keys
+        _new_zone_config["capacity"] = sort_config_keys(_new_zone_config["capacity"])
+        ZONES_CONFIG[parent_zone] = _new_zone_config
+        write_zone_config(parent_zone, _new_zone_config)
+    else:
+        logger.warning(
+            f"{parent_zone} capacity could not be updated because not all capacities are available"
+        )
