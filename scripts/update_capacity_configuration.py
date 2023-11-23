@@ -2,10 +2,10 @@ from copy import deepcopy
 from typing import Any
 
 from electricitymap.contrib.config import CONFIG_DIR, ZONE_PARENT
+from electricitymap.contrib.config.constants import PRODUCTION_MODES, STORAGE_MODES
 from electricitymap.contrib.config.reading import read_zones_config
 from electricitymap.contrib.lib.types import ZoneKey
 from scripts.utils import write_zone_config
-from electricitymap.contrib.config.constants import PRODUCTION_MODES, STORAGE_MODES
 
 ZONES_CONFIG = read_zones_config(CONFIG_DIR)
 CAPACITY_MODES = PRODUCTION_MODES + [f"{mode} storage" for mode in STORAGE_MODES]
@@ -88,63 +88,38 @@ def update_capacity_list(
         ]
 
 
+def check_capacity_config_type(capacity_config: list, config_type: type) -> None:
+    """Check that the capacity config is of the specified type"""
+    return (
+        True
+        if all(isinstance(item, config_type) for item in capacity_config)
+        else False
+    )
+
+
 def update_aggregated_capacity_config(parent_zone: ZoneKey) -> dict[str, Any]:
-    zone_keys = [
-        zone_key for zone_key in ZONES_CONFIG if ZONE_PARENT[zone_key] == parent_zone
-    ]
+    zone_keys = [zone for zone in ZONE_PARENT if ZONE_PARENT[zone] == parent_zone]
     parent_capacity_config = ZONES_CONFIG[parent_zone]["capacity"]
 
-    all_capacity_configs = {zone: ZONES_CONFIG[zone]["capacity"] for zone in zone_keys}
-    for mode in parent_capacity_config:
-        all_capacity_configs_mode = {
-            zone: all_capacity_configs[zone][mode] for zone in zone_keys
-        }
-        # check that all capacity configs values have the same type
-        if not all(
-            isinstance(
-                capacity_config, type(all_capacity_configs_mode[zone_keys[0]][mode])
-            )
-            for capacity_config in all_capacity_configs_mode.values()
+    all_capacity_configs = [ZONES_CONFIG[zone]["capacity"] for zone in zone_keys]
+
+    for mode in CAPACITY_MODES:
+        mode_capacity_configs = [
+            capacity_config[mode] for capacity_config in all_capacity_configs
+        ]
+        if not check_capacity_config_type(
+            mode_capacity_configs, mode_capacity_configs[0]
         ):
             raise ValueError(
                 f"{parent_zone} capacity could not be updated because all capacity configs must have the same type"
             )
-        if all(
-            isinstance(capacity_config, dict)
-            for capacity_config in all_capacity_configs_mode.values()
-        ):
-            for mode in parent_capacity_config:
-                datetime_values = set(
-                    [
-                        capacity_config["datetime"]
-                        for capacity_config in all_capacity_configs_mode.values()
-                    ]
-                )
-                if len(datetime_values) != 1:
-                    raise ValueError(
-                        f"{parent_zone} capacity could not be updated because all capacity configs must have the same datetime values"
-                    )
-                else:
-                    aggregated_capacity_value = sum(
-                        [
-                            0
-                            if all_capacity_configs_mode[zone]["value"] is None
-                            else all_capacity_configs_mode[zone]["value"]
-                            for zone in zone_keys
-                        ]
-                    )
-                    parent_capacity_config[mode]["value"] = aggregated_capacity_value
-                    parent_capacity_config[mode]["datetime"] = datetime_values.pop()
-        elif all(
-            isinstance(capacity_config, list)
-            for capacity_config in all_capacity_configs_mode.values()
-        ):
-            datetime_values = set(
-                [
-                    capacity_config[mode]["datetime"]
-                    for capacity_config in all_capacity_configs.values()
-                ]
-            )
+        datetime_values = set(
+            [capacity_config["datetime"] for capacity_config in mode_capacity_configs]
+        )
+        sources = set(
+            [capacity_config["source"] for capacity_config in mode_capacity_configs]
+        )
+        if check_capacity_config_type(mode_capacity_configs, dict):
             if len(datetime_values) != 1:
                 raise ValueError(
                     f"{parent_zone} capacity could not be updated because all capacity configs must have the same datetime values"
@@ -153,9 +128,14 @@ def update_aggregated_capacity_config(parent_zone: ZoneKey) -> dict[str, Any]:
                 aggregated_capacity_value = sum(
                     [
                         0
-                        if all_capacity_configs[zone][mode] is None
-                        else all_capacity_configs[zone][mode]
-                        for zone in zone_keys
+                        if capacity_config["value"] is None
+                        else capacity_config["value"]
+                        for capacity_config in mode_capacity_configs
                     ]
                 )
-                parent_capacity_config[mode] = aggregated_capacity_value
+                parent_capacity_config[mode]["value"] = aggregated_capacity_value
+                parent_capacity_config[mode]["datetime"] = list(datetime_values)[0]
+                parent_capacity_config[mode]["source"] = ", ".join([elem for elem in sources if elem is not None])
+        elif check_capacity_config_type(mode_capacity_configs, list):
+
+            # extract values for the same datetime
